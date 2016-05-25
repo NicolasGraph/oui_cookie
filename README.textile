@@ -1,0 +1,63 @@
+h1. oui_cookie (in process!)
+
+Set, reset, read cookies through url variables.
+
+h2(#tags). tags
+
+h3(#oui_cookie). oui_cookie
+
+bc. <txp:oui_cookie />
+
+Set and reset cookies.
+
+h4. Attributes
+
+h3(#oui_cookie). oui_if_cookie
+
+bc.. <txp:oui_if_cookie>
+    […]
+<txp:else />
+    […]
+</txp:oui_if_cookie>
+
+h4. Attributes
+
+p. Check the context.
+
+h2(#examples). Examples
+
+h3(#sort_by). Front end articles sorting
+
+bc.. <select onchange="window.location.href=this.value">
+    <option value="?sort_by=custom_1">Size</option>
+    <option value="?sort_by=custom_2">Weight</option>
+</select>
+
+<txp:article sort='<txp:oui_cookie urlvar="sort_by" values="custom_1, custom_2" default="custom_1" />' />
+
+h3(#eu_cookies). EU cookies Warning
+
+bc.. <txp:oui_cookie urlvar="accept_cookies" values="1, 0" default="0" display="0" />
+
+<txp:oui_if_cookie cookie="accept_cookies" value="1">
+<txp:else />
+    This website uses cookies. <a href="?accept_cookies">Ok!</a>
+</txp:oui_if_cookie>
+
+h3(#switch_output). Output switching
+
+bc.. <ul>
+    <li><a href="?switch_css=2-cols">2 columns</a></li>
+    <li><a href="?switch_css=3-cols">3 columns</a></li>
+    <li><a href="?switch_css=4-cols">4 columns</a></li>
+</ul>
+
+<txp:css name='<txp:oui_cookie urlvar="switch_css" values="2-cols, 3-cols, 4-cols" default="4-cols" />' />
+
+h2(#author). Author
+
+"Nicolas Morand":http://github.com/NicolasGraph, from a "Jukka Svahn":http://rahforum.biz/ "tip":http://textpattern.tips/setting-cookies-for-eu-legislation.
+
+h2(#licence). Licence
+
+This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.html.

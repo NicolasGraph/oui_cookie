@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.1.1-beta';
+$plugin['version'] = '0.1.2';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset of delete cookies through url variables';
@@ -32,7 +32,7 @@ if (0) {
 
 h1. oui_cookie
 
-Set, read, reset of delete cookies through url variables.
+Set, read, reset of delete cookies through url variables
 
 h2. Table of contents
 
@@ -42,8 +42,8 @@ h2. Table of contents
 ** "oui_cookie":#oui_cookie
 ** "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
-** "Front end articles sorting":#sort_by
-** "EU cookies warning":#eu_cookies
+** "Single tag":#single_tag
+** "Container tag":#container_tag
 * "Author":#author
 * "Licence":#licence
 
@@ -135,7 +135,6 @@ This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.
 
 # --- BEGIN PLUGIN CODE ---
 if (class_exists('\Textpattern\Tag\Registry')) {
-    // Register Textpattern tags for TXP 4.6+.
     Txp::get('\Textpattern\Tag\Registry')
         ->register('oui_cookie')
         ->register('oui_if_cookie');
@@ -220,7 +219,8 @@ function oui_if_cookie($atts, $thing = NULL) {
         $errors .= trigger_error('oui_cookie was unable to find your '.$name.' cookie settings');
     }
 
-    return $errors ?: parse(EvalElse($thing, $out));
+    // PREF_PLUGIN is a Txp4.6 feature, so if it is defined we can use the new parser.
+    return $errors ?: defined('PREF_PLUGIN') ? parse($thing, $out) : parse(EvalElse($thing, $out));
 }
 # --- END PLUGIN CODE ---
 

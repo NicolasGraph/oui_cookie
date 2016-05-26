@@ -1,4 +1,4 @@
-h1. oui_cookie (Bêta) <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_cookie.svg" />
+h1. oui_cookie <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_cookie.svg" />
 
 Set, read, reset of delete cookies through url variables.
 

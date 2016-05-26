@@ -1,6 +1,8 @@
-h1. oui_cookie (Bêta)
+h1. oui_cookie (Bêta) <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_instagram.svg" />
 
-Set, reset, read cookies through url variables.
+Set, read, reset of delete cookies through url variables.
+
+"Download":https://github.com/NicolasGraph/oui_cookie/releases | "Donate":https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
 
 h2. Table of contents
 
@@ -32,7 +34,7 @@ h3(#oui_cookie). oui_cookie
 
 bc. <txp:oui_cookie name="…" values="…" />
 
-Set and reset cookies.
+Set, read, reset or delete a cookie through an url variable.
 
 h4. Attributes
 
@@ -45,8 +47,8 @@ h5. Optional
 
 * @default@ - _default: unset_ - A default value.
 * @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
-* @expires@ - _default: +1 day_ - The cookie duration.
-* @reset@ - _default: 0_ - A value which removes the cookie when called through the url variable.
+* @duration@ - _default: +1 day_ - The cookie duration.
+* @delete@ - _default: 0_ - A value which removes the cookie when called through the url variable.
 
 h3(#oui_cookie). oui_if_cookie
 

@@ -4,10 +4,10 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.1.0-beta';
+$plugin['version'] = '0.1.1-beta';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
-$plugin['description'] = 'Set, read, reset cookies through url variables';
+$plugin['description'] = 'Set, read, reset of delete cookies through url variables';
 
 $plugin['order'] = 5;
 
@@ -30,9 +30,9 @@ if (0) {
 ?>
 # --- BEGIN PLUGIN HELP ---
 
-h1. oui_cookie (Bêta)
+h1. oui_cookie
 
-Set, reset, read cookies through url variables.
+Set, read, reset of delete cookies through url variables.
 
 h2. Table of contents
 
@@ -64,7 +64,7 @@ h3(#oui_cookie). oui_cookie
 
 bc. <txp:oui_cookie name="…" values="…" />
 
-Set and reset cookies.
+Set, read, reset or delete a cookie through an url variable.
 
 h4. Attributes
 
@@ -77,8 +77,8 @@ h5. Optional
 
 * @default@ - _default: unset_ - A default value.
 * @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
-* @expires@ - _default: +1 day_ - The cookie duration.
-* @reset@ - _default: 0_ - A value which removes the cookie when called through the url variable.
+* @duration@ - _default: +1 day_ - The cookie duration.
+* @delete@ - _default: 0_ - A value which removes the cookie when called through the url variable.
 
 h3(#oui_cookie). oui_if_cookie
 
@@ -148,8 +148,8 @@ function oui_cookie($atts) {
         'name'    => '',
         'values'  => '',
         'default' => '',
-        'expires' => '+1 day',
-        'reset'   => '0',
+        'duration' => '+1 day',
+        'delete'   => '0',
         'display' => '1',
     ),$atts));
 
@@ -172,11 +172,11 @@ function oui_cookie($atts) {
 
     if (!$errors) {
         if ($gps && in_array($gps, $values, true)) {
-            setcookie($name, $gps, strtotime($expires), '/');
+            setcookie($name, $gps, strtotime($duration), '/');
             $oui_cookies[$name] = true;
             return ($display ? $gps : '');
         } else if ($cs) {
-            if ($gps == $reset) {
+            if ($gps == $delete) {
                 setcookie($name, '', -1, '/');
                 $oui_cookies[$name] = false;
                 return ($display ? $default : '');
@@ -188,6 +188,8 @@ function oui_cookie($atts) {
             $oui_cookies[$name] = false;
             return ($display ? ($default ? $default : '') : '');
         }
+    } else {
+        return;
     }
 }
 
@@ -208,17 +210,17 @@ function oui_if_cookie($atts, $thing = NULL) {
         $errors .= trigger_error('oui_cookie requires an cookie attribute.');
     }
 
-    if ($value) {
-        $out = ($gps == $value || !$gps && $cs == $value) ? true : false;
-    } else {
-        if (isset($oui_cookies[$name])) {
-            $out = $oui_cookies[$name];
+    if (isset($oui_cookies[$name])) {
+        if ($value) {
+            $out = ($oui_cookies[$name] && ($gps == $value || !$gps && $cs == $value)) ? true : false;
         } else {
-            $errors .= trigger_error('oui_cookie was unable to find your '.$name.' cookie settings');
+            $out = $oui_cookies[$name];
         }
+    } else {
+        $errors .= trigger_error('oui_cookie was unable to find your '.$name.' cookie settings');
     }
 
-    if (!$errors) { return parse(EvalElse($thing, $out)); }
+    return $errors ?: parse(EvalElse($thing, $out));
 }
 # --- END PLUGIN CODE ---
 

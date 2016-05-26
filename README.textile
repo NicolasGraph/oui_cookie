@@ -1,4 +1,4 @@
-h1. oui_cookie (Bêta) <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_instagram.svg" />
+h1. oui_cookie (Bêta) <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_cookie.svg" />
 
 Set, read, reset of delete cookies through url variables.
 
@@ -12,8 +12,8 @@ h2. Table of contents
 ** "oui_cookie":#oui_cookie
 ** "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
-** "Single tag":#single_tag
-** "Container tag":#container_tag
+** "Front end articles sorting":#sort_by
+** "EU cookies warning":#eu_cookies
 * "Author":#author
 * "Licence":#licence
 

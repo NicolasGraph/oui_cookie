@@ -42,8 +42,8 @@ h2. Table of contents
 ** "oui_cookie":#oui_cookie
 ** "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
-** "Single tag":#single_tag
-** "Container tag":#container_tag
+** "Front end articles sorting":#sort_by
+** "EU cookies warning":#eu_cookies
 * "Author":#author
 * "Licence":#licence
 

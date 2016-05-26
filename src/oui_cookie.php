@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.1.0';
+$plugin['version'] = '0.1.0-beta';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset cookies through url variables';
@@ -30,61 +30,96 @@ if (0) {
 ?>
 # --- BEGIN PLUGIN HELP ---
 
-h1. oui_cookie (in process!)
+h1. oui_cookie (Bêta)
 
 Set, reset, read cookies through url variables.
+
+h2. Table of contents
+
+* "Plugin requirements":#requirements
+* "Installation":#installation
+* "Tags":#tags
+** "oui_cookie":#oui_cookie
+** "oui_if_cookie":#oui_if_cookie
+* "Examples":#examples
+** "Single tag":#single_tag
+** "Container tag":#container_tag
+* "Author":#author
+* "Licence":#licence
+
+h2(#requirements). Plugin requirements
+
+oui_instagram’s minimum requirements:
+
+* Textpattern 4.5+
+
+h2(#installation). Installation
+
+# Paste the content of the plugin file under the *Admin > Plugins*, upload, install and enable it;
+# Set your tags…
 
 h2(#tags). tags
 
 h3(#oui_cookie). oui_cookie
 
-bc. <txp:oui_cookie />
+bc. <txp:oui_cookie name="…" values="…" />
 
 Set and reset cookies.
 
 h4. Attributes
 
+h5. Required
+
+* @name@ - _default: unset_ - The name of the url variable used and of the cookie set by it.
+* @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie.
+
+h5. Optional
+
+* @default@ - _default: unset_ - A default value.
+* @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
+* @expires@ - _default: +1 day_ - The cookie duration.
+* @reset@ - _default: 0_ - A value which removes the cookie when called through the url variable.
+
 h3(#oui_cookie). oui_if_cookie
 
-bc.. <txp:oui_if_cookie>
+bc.. <txp:oui_if_cookie name="…">
     […]
 <txp:else />
     […]
 </txp:oui_if_cookie>
 
+p. Check the context.
+
 h4. Attributes
 
-p. Check the context.
+h5. Required
+
+* @name@ - _default: unset_ - The name of the url variable used and of the cookie set by it.
+
+h5. Optional
+
+* @value@ - _default: unset_ - A value to check against the url variable or the cookie value.
 
 h2(#examples). Examples
 
 h3(#sort_by). Front end articles sorting
 
 bc.. <select onchange="window.location.href=this.value">
+    <option value="" disabled selected>Sort by</option>
     <option value="?sort_by=custom_1">Size</option>
     <option value="?sort_by=custom_2">Weight</option>
 </select>
 
-<txp:article sort='<txp:oui_cookie urlvar="sort_by" values="custom_1, custom_2" default="custom_1" />' />
+<txp:article sort='<txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />' />
 
 h3(#eu_cookies). EU cookies Warning
 
-bc.. <txp:oui_cookie urlvar="accept_cookies" values="1, 0" default="0" display="0" />
+bc.. <txp:oui_cookie name="accept_cookies" values="1, 0" default="0" display="0" />
 
-<txp:oui_if_cookie cookie="accept_cookies" value="1">
+<txp:oui_if_cookie name="accept_cookies">
 <txp:else />
-    This website uses cookies. <a href="?accept_cookies">Ok!</a>
+    This website uses cookies. <a href="?accept_cookies=ok">Ok!</a>
 </txp:oui_if_cookie>
-
-h3(#switch_output). Output switching
-
-bc.. <ul>
-    <li><a href="?switch_css=2-cols">2 columns</a></li>
-    <li><a href="?switch_css=3-cols">3 columns</a></li>
-    <li><a href="?switch_css=4-cols">4 columns</a></li>
-</ul>
-
-<txp:css name='<txp:oui_cookie urlvar="switch_css" values="2-cols, 3-cols, 4-cols" default="4-cols" />' />
 
 h2(#author). Author
 
@@ -107,48 +142,83 @@ if (class_exists('\Textpattern\Tag\Registry')) {
 }
 
 function oui_cookie($atts) {
+    global $oui_cookies;
 
     extract(lAtts(array(
-        'urlvar'  => '',
+        'name'    => '',
         'values'  => '',
-        'default'  => '',
+        'default' => '',
         'expires' => '+1 day',
         'reset'   => '0',
         'display' => '1',
     ),$atts));
 
-    $values = array_map('trim', explode(",", $values));
-    $gps = strval(gps($urlvar));
-    $cs = cs($urlvar);
+    $errors = '';
 
-    if ($gps && in_array($gps, $values, true)) {
-        setcookie($urlvar, $gps, strtotime(''.$expires.''), '/');
-        return ($display ? $gps : '');
-    } else if ($cs) {
-        if ($gps == $reset) {
-            setcookie($urlvar, '', -1, '/');
-            return ($display ? $default : '');
-        } else {
-            return ($display ? $cs : '');
-        }
+    $oui_cookies = $oui_cookies ?: array();
+
+    if ($name) {
+        $gps = strval(gps($name));
+        $cs = cs($name);
     } else {
-        return ($display ? $default : '');
+        $errors .= trigger_error('oui_cookie requires an name attribute.');
+    }
+
+    if ($values) {
+        $values = array_map('trim', explode(",", $values));
+    } else {
+        $errors .= trigger_error('oui_cookie requires a values attribute.');
+    }
+
+    if (!$errors) {
+        if ($gps && in_array($gps, $values, true)) {
+            setcookie($name, $gps, strtotime($expires), '/');
+            $oui_cookies[$name] = true;
+            return ($display ? $gps : '');
+        } else if ($cs) {
+            if ($gps == $reset) {
+                setcookie($name, '', -1, '/');
+                $oui_cookies[$name] = false;
+                return ($display ? $default : '');
+            } else {
+                $oui_cookies[$name] = true;
+                return ($display ? $cs : '');
+            }
+        } else {
+            $oui_cookies[$name] = false;
+            return ($display ? ($default ? $default : '') : '');
+        }
     }
 }
 
 function oui_if_cookie($atts, $thing = NULL) {
+    global $oui_cookies;
 
     extract(lAtts(array(
-        'cookie'  => '',
-        'value'  => '',
+        'name'  => '',
+        'value' => '',
     ),$atts));
 
-    $gps = strval(gps($cookie));
-    $cs = cs($cookie);
+    $errors = '';
 
-    $out = ($gps == $value || !$gps && $cs == $value) ? true : false;
+    if ($name) {
+        $gps = strval(gps($name));
+        $cs = cs($name);
+    } else {
+        $errors .= trigger_error('oui_cookie requires an cookie attribute.');
+    }
 
-    return parse(EvalElse($thing, $out));
+    if ($value) {
+        $out = ($gps == $value || !$gps && $cs == $value) ? true : false;
+    } else {
+        if (isset($oui_cookies[$name])) {
+            $out = $oui_cookies[$name];
+        } else {
+            $errors .= trigger_error('oui_cookie was unable to find your '.$name.' cookie settings');
+        }
+    }
+
+    if (!$errors) { return parse(EvalElse($thing, $out)); }
 }
 # --- END PLUGIN CODE ---
 

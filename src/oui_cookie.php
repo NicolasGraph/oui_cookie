@@ -7,7 +7,7 @@ $plugin['allow_html_help'] = 0;
 $plugin['version'] = '0.1.2';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
-$plugin['description'] = 'Set, read, reset of delete cookies through url variables';
+$plugin['description'] = 'Set, read, reset or delete cookies through url variables';
 
 $plugin['order'] = 5;
 
@@ -32,7 +32,7 @@ if (0) {
 
 h1. oui_cookie
 
-Set, read, reset of delete cookies through url variables
+Set, read, reset or delete cookies through url variables
 
 h2. Table of contents
 

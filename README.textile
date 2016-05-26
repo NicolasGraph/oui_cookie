@@ -1,6 +1,6 @@
 h1. oui_cookie <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_cookie.svg" />
 
-Set, read, reset of delete cookies through url variables.
+Set, read, reset or delete cookies through url variables.
 
 "Download":https://github.com/NicolasGraph/oui_cookie/releases | "Donate":https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
 

@@ -114,11 +114,11 @@ bc.. <select onchange="window.location.href=this.value">
 
 h3(#eu_cookies). EU cookies Warning
 
-bc.. <txp:oui_cookie name="accept_cookies" values="1, 0" default="0" display="0" />
+bc.. <txp:oui_cookie name="accept_cookies" values="1" display="0" />
 
 <txp:oui_if_cookie name="accept_cookies">
 <txp:else />
-    This website uses cookies. <a href="?accept_cookies=ok">Ok!</a>
+    This website uses cookies. <a href="?accept_cookies=1">Ok!</a>
 </txp:oui_if_cookie>
 
 h2(#author). Author

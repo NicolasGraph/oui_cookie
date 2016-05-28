@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.1.2';
+$plugin['version'] = '0.1.3-dev';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset or delete cookies through url variables';
@@ -32,7 +32,10 @@ if (0) {
 
 h1. oui_cookie
 
-Set, read, reset or delete cookies through url variables
+Set, read, reset or delete cookies through url variables.
+
+This plugin allows to catch defined url variables and check their values. It can store a valid value in a cookie, reset this one or delete it with only one tag. The same tag can also returns the current valid value of the url variable or of the cookie set.
+Moreover, you can check the status or the value of a defined url variable or cookie with a conditional tag.
 
 h2. Table of contents
 
@@ -42,8 +45,8 @@ h2. Table of contents
 ** "oui_cookie":#oui_cookie
 ** "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
-** "Single tag":#single_tag
-** "Container tag":#container_tag
+** "Front end articles sorting":#sort_by
+** "EU cookies warning":#eu_cookies
 * "Author":#author
 * "Licence":#licence
 
@@ -64,7 +67,7 @@ h3(#oui_cookie). oui_cookie
 
 bc. <txp:oui_cookie name="…" values="…" />
 
-Set, read, reset or delete a cookie through an url variable.
+This tag catches the named url variable if its value is one of the accepted values defined via the @values@ attribute. Once catched, this value can be displayed, used for conditional output and is stored in a cookie. This cookie can be deleted by calling the value of the @delete@ attribute as the value of the url variable.
 
 h4. Attributes
 
@@ -88,7 +91,7 @@ bc.. <txp:oui_if_cookie name="…">
     […]
 </txp:oui_if_cookie>
 
-p. Check the context.
+p. This tag checks the url variable or the cookie defined by the @name@ attribute and its related cookie. if the url variable is used and its value is the value defined via the @value@ attribute or if a related cookie is set to this value, the condition is true. If the @value@ attribute is not set, the plugin looks for one of the accepted values previoulsy set in the @<txp:oui_cookie />@ tag.
 
 h4. Attributes
 
@@ -112,6 +115,9 @@ bc.. <select onchange="window.location.href=this.value">
 
 <txp:article sort='<txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />' />
 
+p. The first part of the code is a simple select element which is submited on change. Each selectable option value sets a different value to an url variable.
+In the second part, we used @<txp:oui_cookie />@ as the value of the @sort@ attribute of @<txp:article />@. The plugin do its job by catching the @sort_by@ variable and its value. If it is equal to one of the @values@, it returns and stores it in a cookie named _sort_by_ to keep the selected order.
+
 h3(#eu_cookies). EU cookies Warning
 
 bc.. <txp:oui_cookie name="accept_cookies" values="1" display="0" />
@@ -128,6 +134,7 @@ h2(#author). Author
 h2(#licence). Licence
 
 This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.html.
+
 
 # --- END PLUGIN HELP ---
 <?php

@@ -226,7 +226,7 @@ function oui_if_cookie($atts, $thing = NULL) {
             $valid = in_list($gps, $oui_cookies[$name], $delim = ',');
             $out = ($oui_cookies[$name] && ($gps == $value || !$valid && $cs == $value)) ? true : false;
         } else {
-            $out = $oui_cookies[$name];
+            $out = $oui_cookies[$name] ? true : false;
         }
     } else {
         $errors .= trigger_error('oui_cookie was unable to find your '.$name.' cookie settings');

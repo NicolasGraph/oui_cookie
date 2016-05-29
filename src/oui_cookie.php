@@ -67,7 +67,7 @@ h3(#oui_cookie). oui_cookie
 
 bc. <txp:oui_cookie name="…" values="…" />
 
-This tag catches the named url variable if its value is one of the accepted values defined via the @values@ attribute. Once catched, this value can be displayed, used for conditional output and is stored in a cookie. This cookie can be deleted by calling the value of the @delete@ attribute as the value of the url variable.
+This tag catches the named the url variable if its value is one of the accepted values defined via the @values@ attribute. Once catched, this value can be displayed, used for conditional output and is stored in a cookie. This cookie can be deleted by calling the value of the @delete@ attribute as the value of the url variable.
 
 h4. Attributes
 
@@ -81,7 +81,7 @@ h5. Optional
 * @default@ - _default: unset_ - A default value.
 * @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
 * @duration@ - _default: +1 day_ - The cookie duration.
-* @delete@ - _default: 0_ - A value which removes the cookie when called through the url variable.
+* @delete@ - _default: any value which is not one of the accepted values_ - A value which removes the cookie when called through the url variable.
 
 h3(#oui_cookie). oui_if_cookie
 
@@ -91,7 +91,7 @@ bc.. <txp:oui_if_cookie name="…">
     […]
 </txp:oui_if_cookie>
 
-p. This tag checks the url variable or the cookie defined by the @name@ attribute and its related cookie. if the url variable is used and its value is the value defined via the @value@ attribute or if a related cookie is set to this value, the condition is true. If the @value@ attribute is not set, the plugin looks for one of the accepted values previoulsy set in the @<txp:oui_cookie />@ tag.
+p. This tag checks the url variable defined by the @name@ attribute and its related cookie. if the url variable is used and its value is the value defined via the @value@ attribute or if a related cookie is set with this value, the condition is true. If the @value@ attribute is not set, the plugin looks for one of the accepted values previoulsy set in the @<txp:oui_cookie />@ tag.
 
 h4. Attributes
 
@@ -115,7 +115,7 @@ bc.. <select onchange="window.location.href=this.value">
 
 <txp:article sort='<txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />' />
 
-p. The first part of the code is a simple select element which is submited on change. Each selectable option value sets a different value to an url variable.
+p. The first part of the code is a simple select element which is submited on change. Each selectable option value sets a diferent value to an url variable.
 In the second part, we used @<txp:oui_cookie />@ as the value of the @sort@ attribute of @<txp:article />@. The plugin do its job by catching the @sort_by@ variable and its value. If it is equal to one of the @values@, it returns and stores it in a cookie named _sort_by_ to keep the selected order.
 
 h3(#eu_cookies). EU cookies Warning
@@ -147,6 +147,10 @@ if (class_exists('\Textpattern\Tag\Registry')) {
         ->register('oui_if_cookie');
 }
 
+/**
+ * Reads a HTTP variable, checks its value,
+ * returns it and stores it in a cookie.
+ */
 function oui_cookie($atts) {
     global $oui_cookies;
 
@@ -155,7 +159,7 @@ function oui_cookie($atts) {
         'values'  => '',
         'default' => '',
         'duration' => '+1 day',
-        'delete'   => '0',
+        'delete'   => '',
         'display' => '1',
     ),$atts));
 
@@ -171,25 +175,23 @@ function oui_cookie($atts) {
     }
 
     if ($values) {
-        $values = array_map('trim', explode(",", $values));
+        $valid = in_list($gps, $values, $delim = ',');
     } else {
         $errors .= trigger_error('oui_cookie requires a values attribute.');
     }
 
     if (!$errors) {
-        if ($gps && in_array($gps, $values, true)) {
+        if ($valid) {
             setcookie($name, $gps, strtotime($duration), '/');
             $oui_cookies[$name] = true;
             return ($display ? $gps : '');
+        } else if ($delete ? $gps == $delete : $gps && !$valid) {
+            setcookie($name, '', -1, '/');
+            $oui_cookies[$name] = false;
+            return ($display ? ($default ? $default : '') : '');
         } else if ($cs) {
-            if ($gps == $delete) {
-                setcookie($name, '', -1, '/');
-                $oui_cookies[$name] = false;
-                return ($display ? $default : '');
-            } else {
-                $oui_cookies[$name] = true;
-                return ($display ? $cs : '');
-            }
+            $oui_cookies[$name] = true;
+            return ($display ? $cs : '');
         } else {
             $oui_cookies[$name] = false;
             return ($display ? ($default ? $default : '') : '');
@@ -199,6 +201,9 @@ function oui_cookie($atts) {
     }
 }
 
+/**
+ * Checks the status or the value of a HTTP variable or a cookie.
+ */
 function oui_if_cookie($atts, $thing = NULL) {
     global $oui_cookies;
 

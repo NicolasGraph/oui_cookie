@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.1.3-dev';
+$plugin['version'] = '0.1.3';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset or delete cookies through url variables';
@@ -67,7 +67,7 @@ h3(#oui_cookie). oui_cookie
 
 bc. <txp:oui_cookie name="…" values="…" />
 
-This tag catches the named the url variable if its value is one of the accepted values defined via the @values@ attribute. Once catched, this value can be displayed, used for conditional output and is stored in a cookie. This cookie can be deleted by calling the value of the @delete@ attribute as the value of the url variable.
+This tag catches the named the url variable if its value is one of the accepted values defined via the @values@ attribute. Once catched, this value can be displayed, used for conditional output and is stored in a cookie. This cookie can be deleted by calling any other value than the ones list in the @values@ attribute, or you can choose a defined value for this task via the @delete@ attribute.
 
 h4. Attributes
 
@@ -81,7 +81,7 @@ h5. Optional
 * @default@ - _default: unset_ - A default value.
 * @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
 * @duration@ - _default: +1 day_ - The cookie duration.
-* @delete@ - _default: any value which is not one of the accepted values_ - A value which removes the cookie when called through the url variable.
+* @delete@ - _default: any value which is not one of the accepted values_ - A defined value which removes the cookie when called through the url variable.
 
 h3(#oui_cookie). oui_if_cookie
 
@@ -91,7 +91,7 @@ bc.. <txp:oui_if_cookie name="…">
     […]
 </txp:oui_if_cookie>
 
-p. This tag checks the url variable defined by the @name@ attribute and its related cookie. if the url variable is used and its value is the value defined via the @value@ attribute or if a related cookie is set with this value, the condition is true. If the @value@ attribute is not set, the plugin looks for one of the accepted values previoulsy set in the @<txp:oui_cookie />@ tag.
+p. This tag checks the value the status or the value of the HTTP variable defined by the @name@ attribute and its related cookie. If the @value@ attribute is not set, the plugin looks for one of the accepted values previoulsy set in the @<txp:oui_cookie />@ tag.
 
 h4. Attributes
 
@@ -183,14 +183,14 @@ function oui_cookie($atts) {
     if (!$errors) {
         if ($valid) {
             setcookie($name, $gps, strtotime($duration), '/');
-            $oui_cookies[$name] = true;
+            $oui_cookies[$name] = $values;
             return ($display ? $gps : '');
         } else if ($delete ? $gps == $delete : $gps && !$valid) {
             setcookie($name, '', -1, '/');
             $oui_cookies[$name] = false;
             return ($display ? ($default ? $default : '') : '');
         } else if ($cs) {
-            $oui_cookies[$name] = true;
+            $oui_cookies[$name] = $values;
             return ($display ? $cs : '');
         } else {
             $oui_cookies[$name] = false;
@@ -223,7 +223,8 @@ function oui_if_cookie($atts, $thing = NULL) {
 
     if (isset($oui_cookies[$name])) {
         if ($value) {
-            $out = ($oui_cookies[$name] && ($gps == $value || !$gps && $cs == $value)) ? true : false;
+            $valid = in_list($gps, $oui_cookies[$name], $delim = ',');
+            $out = ($oui_cookies[$name] && ($gps == $value || !$valid && $cs == $value)) ? true : false;
         } else {
             $out = $oui_cookies[$name];
         }

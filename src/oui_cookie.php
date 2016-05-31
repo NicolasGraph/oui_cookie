@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.1.3';
+$plugin['version'] = '0.2.0-beta';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset or delete cookies through url variables';
@@ -32,10 +32,10 @@ if (0) {
 
 h1. oui_cookie
 
-Set, read, reset or delete cookies through url variables.
+This plugin allows to set, read, reset or delete a cookie manually or through a HTTP variable.
+It is also possible to check the status or the value of a defined cookie.
 
-This plugin allows to catch defined url variables and check their values. It can store a valid value in a cookie, reset this one or delete it with only one tag. The same tag can also returns the current valid value of the url variable or of the cookie set.
-Moreover, you can check the status or the value of a defined url variable or cookie with a conditional tag.
+*Warning:* According to the EU legislation you need to warn your users if your website set cookies.
 
 h2. Table of contents
 
@@ -46,42 +46,53 @@ h2. Table of contents
 ** "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
 ** "Front end articles sorting":#sort_by
+** "Recently viewed articles":#recently_viewed
 ** "EU cookies warning":#eu_cookies
 * "Author":#author
 * "Licence":#licence
 
 h2(#requirements). Plugin requirements
 
-oui_instagram’s minimum requirements:
-
-* Textpattern 4.5+
+oui_cookie requires Textpattern 4.6+ from the version 0.2.0.
 
 h2(#installation). Installation
 
-# Paste the content of the plugin file under the *Admin > Plugins*, upload, install and enable it;
+# Paste the content of the plugin file under the *Admin > Plugins* tab, upload, install and enable it;
 # Set your tags…
 
 h2(#tags). tags
 
 h3(#oui_cookie). oui_cookie
 
-bc. <txp:oui_cookie name="…" values="…" />
+bc. <txp:oui_cookie name="…" />
 
-This tag catches the named the url variable if its value is one of the accepted values defined via the @values@ attribute. Once catched, this value can be displayed, used for conditional output and is stored in a cookie. This cookie can be deleted by calling any other value than the ones list in the @values@ attribute, or you can choose a defined value for this task via the @delete@ attribute.
+This tag is able to set a cookie manually with the @value@ attribute or through an HTTP variable thanks to the @values@ attribute which list accepted values. It is also able to read and return the current valid value of a HTTP variable or of the cookie set.
 
 h4. Attributes
 
 h5. Required
 
 * @name@ - _default: unset_ - The name of the url variable used and of the cookie set by it.
-* @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie.
 
-h5. Optional
+h5. Set a cookie
 
-* @default@ - _default: unset_ - A default value.
-* @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
-* @duration@ - _default: +1 day_ - The cookie duration.
+* @duration@ - _default: +1 day_ - A "strtotime":http://php.net/manual/fr/function.strtotime.php value to set the cookie duration.
+
+h6. Manually set a cookie
+
+* @value@ - _default: unset_ - A value to manually set the named cookie.
+
+h6. Set a cookie through a HTTP variable
+
+* @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie. If not set the tag will only read the cookie value.
+* @default@ - _default: unset_ - A default value. If set, the plugin conditional tag will always be true if not check against a defined value.
 * @delete@ - _default: any value which is not one of the accepted values_ - A defined value which removes the cookie when called through the url variable.
+
+h5. Read a cookie (also works while setting)
+
+* @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
+* @limit@ - _default: 1_ - Allows to add each found value to the cookie value untill.
+* @offset@ - _default: 0_ - When a cookie is read you could occasionaly need to use this attribute to skip a defined number of values when the cookie contains a list.
 
 h3(#oui_cookie). oui_if_cookie
 
@@ -91,7 +102,7 @@ bc.. <txp:oui_if_cookie name="…">
     […]
 </txp:oui_if_cookie>
 
-p. This tag checks the value the status or the value of the HTTP variable defined by the @name@ attribute and its related cookie. If the @value@ attribute is not set, the plugin looks for one of the accepted values previoulsy set in the @<txp:oui_cookie />@ tag.
+p. This tag checks the status or the value of the HTTP variable defined by the @name@ attribute and its related cookie.
 
 h4. Attributes
 
@@ -116,7 +127,32 @@ bc.. <select onchange="window.location.href=this.value">
 <txp:article sort='<txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />' />
 
 p. The first part of the code is a simple select element which is submited on change. Each selectable option value sets a diferent value to an url variable.
+
 In the second part, we used @<txp:oui_cookie />@ as the value of the @sort@ attribute of @<txp:article />@. The plugin do its job by catching the @sort_by@ variable and its value. If it is equal to one of the @values@, it returns and stores it in a cookie named _sort_by_ to keep the selected order.
+
+h3(#recently_viewed). Recently viewed articles
+
+If you use raw url's, you can catch and store articles id's by using the following code in your article form:
+
+bc. <txp:if_individual_article>
+    <txp:oui_cookie name="id" values='<txp:article_id />' limit="5" display="0" />
+</txp:if_individual_article>
+
+This works because Textpattern raw url's use a HTTP variable named _id_ and set to the article id.
+
+If you use an url rewrite rule, you need to store the article id like so:
+
+bc. <txp:if_individual_article>
+    <txp:oui_cookie name="id" value='<txp:article_id />' limit="5" display="0" />
+</txp:if_individual_article>
+
+Here, we are setting the value manually, so we could change the @name@.
+
+Now, to display a list of up to five recently viewed articles, use the following code anywhere you want…
+
+bc. <txp:if_cookie name="id">
+    <txp:article_custom id='<txp:oui_cookie name="id" />' />
+</txp:if_cookie>
 
 h3(#eu_cookies). EU cookies Warning
 
@@ -155,12 +191,15 @@ function oui_cookie($atts) {
     global $oui_cookies;
 
     extract(lAtts(array(
-        'name'    => '',
-        'values'  => '',
-        'default' => '',
+        'name'     => '',
+        'values'   => '',
+        'value'    => '',
+        'default'  => '',
         'duration' => '+1 day',
         'delete'   => '',
-        'display' => '1',
+        'display'  => '1',
+        'limit'    => '1',
+        'offset'   => '0',
     ),$atts));
 
     $errors = '';
@@ -171,34 +210,66 @@ function oui_cookie($atts) {
         $gps = strval(gps($name));
         $cs = cs($name);
     } else {
-        $errors .= trigger_error('oui_cookie requires an name attribute.');
-    }
-
-    if ($values) {
-        $valid = in_list($gps, $values, $delim = ',');
-    } else {
-        $errors .= trigger_error('oui_cookie requires a values attribute.');
-    }
-
-    if (!$errors) {
-        if ($valid) {
-            setcookie($name, $gps, strtotime($duration), '/');
-            $oui_cookies[$name] = $values;
-            return ($display ? $gps : '');
-        } else if ($delete ? $gps == $delete : $gps && !$valid) {
-            setcookie($name, '', -1, '/');
-            $oui_cookies[$name] = false;
-            return ($display ? ($default ? $default : '') : '');
-        } else if ($cs) {
-            $oui_cookies[$name] = $values;
-            return ($display ? $cs : '');
-        } else {
-            $oui_cookies[$name] = false;
-            return ($display ? ($default ? $default : '') : '');
-        }
-    } else {
+        trigger_error('oui_cookie requires an name attribute.');
         return;
     }
+
+    $valid = $values ? in_list($gps, $values, $delim = ',') : false;
+
+    // HTTP variable is set to one of the valid values
+    if ($valid) {
+        $cs = $gps.', '.$cs;
+        $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
+        setcookie($name, $cs, strtotime($duration), '/');
+        $oui_cookies[$name] = $values;
+        return $display ? $cs : '';
+
+    // HTTP variable is set to the delete value if defined or to a non valid value
+    } else if ($delete ? $gps == $delete : $gps && !$valid) {
+
+        // Set the cookie according to the default value…
+        if ($default) {
+            setcookie($name, $default, strtotime($duration), '/');
+            $oui_cookies[$name] = $default;
+            return ($display ? $default : '');
+
+        // …or remove the cookie
+        } else {
+            setcookie($name, '', -1, '/');
+            $oui_cookies[$name] = false;
+            return;
+        }
+
+    // A cookie already exists
+    } else if ($cs) {
+
+        // Set/Add a new value if found…
+        if ($value) {
+            $cs = $value.', '.$cs;
+            $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
+            setcookie($name, $cs, strtotime($duration), '/');
+            $oui_cookies[$name] = $value;
+            return $display ? $cs : '';
+
+        // …or just return the cookie value
+        } else {
+            $oui_cookies[$name] = $values ? $values : $default;
+            return $display ? $cs : '';
+        }
+
+    // No valid/delete HTTP variable, no cookie set
+    } else if ($value || $default) {
+        $cs = $value ? $value.', '.$cs : $default.', '.$cs;
+        $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
+        setcookie($name, $cs, strtotime($duration), '/');
+        $oui_cookies[$name] = $value ? $value : $default;
+        return $display ? $cs : '';
+
+    // Else?
+    } else {
+        $oui_cookies[$name] = false;
+    }
+
 }
 
 /**
@@ -221,19 +292,25 @@ function oui_if_cookie($atts, $thing = NULL) {
         $errors .= trigger_error('oui_cookie requires an cookie attribute.');
     }
 
-    if (isset($oui_cookies[$name])) {
+    // HTTP variable found
+    if ($gps) {
         if ($value) {
-            $valid = in_list($gps, $oui_cookies[$name], $delim = ',');
-            $out = ($oui_cookies[$name] && ($gps == $value || !$valid && $cs == $value)) ? true : false;
+            $valid = in_list($gps, $oui_cookies[$name]);
+            $out = ($oui_cookies[$name] && ($gps == $value || !$valid && in_list($value, $cs))) ? true : false;
         } else {
             $out = $oui_cookies[$name] ? true : false;
         }
+
+    // No HTTP variable but cookie found
+    } else if ($cs) {
+        $out = $value ? in_list($value, $cs) : true;
+
+    // No HTTP variable, no cookie
     } else {
-        $errors .= trigger_error('oui_cookie was unable to find your '.$name.' cookie settings');
+        $out = $value ? in_list($value, $oui_cookies[$name]) : $oui_cookies[$name] ? true : false;
     }
 
-    // PREF_PLUGIN is a Txp4.6 feature, so if it is defined we can use the new parser.
-    return $errors ?: defined('PREF_PLUGIN') ? parse($thing, $out) : parse(EvalElse($thing, $out));
+    return parse($thing, $out);
 }
 # --- END PLUGIN CODE ---
 

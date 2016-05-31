@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.2.0-beta';
+$plugin['version'] = '0.2.1-dev';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset or delete cookies through url variables';
@@ -239,6 +239,11 @@ function oui_cookie($atts) {
             $oui_cookies[$name] = false;
             return;
         }
+
+    // A non valid HTTP variable is found but the Delete attribute is set
+    } else if ($delete && $gps && !$valid) {
+        $oui_cookies[$name] = $values ? $values : $default;
+        return $display ? $cs : '';
 
     // A cookie already exists
     } else if ($cs) {

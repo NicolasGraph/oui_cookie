@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.2.1-dev';
+$plugin['version'] = '0.2.2-dev';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset or delete cookies through url variables';
@@ -77,6 +77,7 @@ h5. Required
 h5. Set a cookie
 
 * @duration@ - _default: +1 day_ - A "strtotime":http://php.net/manual/fr/function.strtotime.php value to set the cookie duration.
+* @display@ - _default: 0_ - By default the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
 
 h6. Manually set a cookie
 
@@ -90,7 +91,6 @@ h6. Set a cookie through a HTTP variable
 
 h5. Read a cookie (also works while setting)
 
-* @display@ - _default: 0 during the cookie setting (if value or values is set), 1 on reading_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
 * @limit@ - _default: 1_ - Allows to add each found value to the cookie value untill.
 * @offset@ - _default: 0_ - When a cookie is read you could occasionaly need to use this attribute to skip a defined number of values when the cookie contains a list.
 
@@ -202,7 +202,6 @@ function oui_cookie($atts) {
         'offset'   => '0',
     ),$atts));
 
-    $display = ($value || $values) && !$display ? '0' : '1';
     $oui_cookies = $oui_cookies ?: array();
 
     if ($name) {
@@ -213,80 +212,90 @@ function oui_cookie($atts) {
         return;
     }
 
-    $valid = $values ? in_list($gps, $values, $delim = ',') : false;
-
     /**
-     * HTTP variable is set to one of the valid 'values';
-     * set the related cookie.
+     * Manually set a cookie
      */
-    if ($valid) {
-        $cs = $gps.', '.$cs;
-        $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
-        setcookie($name, $cs, strtotime($duration), '/');
-        $oui_cookies[$name] = $values;
-        return $display ? $cs : '';
-    }
-    /**
-     * HTTP variable is set to the delete value if defined or to a non valid value;
-     * delete the cookie or set it to the 'default' value.
-     */
-    else if ($delete == '!' || ($delete ? $gps == $delete : $gps && !$valid)) {
+    if ($value) {
 
-        if ($default) {
-            setcookie($name, $default, strtotime($duration), '/');
-            $oui_cookies[$name] = $default;
-            return ($display ? $default : '');
-
-        } else {
+        if ($value == $delete) {
             setcookie($name, '', -1, '/');
             $oui_cookies[$name] = false;
             return;
-        }
-    }
-    /**
-     * A non valid HTTP variable is found but the 'delete' attribute is set;
-     * do nothing.
-     */
-    else if ($gps && !$valid && $delete) {
-        $oui_cookies[$name] = $values ? $values : $default;
-        return $display ? $cs : '';
-    }
-    /**
-     * A cookie already exists;
-     * reset the cookie if a new 'value' is found or do nothing.
-     */
-    else if ($cs) {
-
-        if ($value) {
+        } else {
             $cs = $value.', '.$cs;
             $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
             setcookie($name, $cs, strtotime($duration), '/');
             $oui_cookies[$name] = $value;
             return $display ? $cs : '';
-
-        } else {
-            $oui_cookies[$name] = $values ? $values : $default;
-            return $display ? $cs : '';
         }
     }
     /**
-     * No valid/delete HTTP variable, no cookie set;
-     * set the cookie to the 'value' or 'default' attribute value.
+     * Set a cookie through HTTP variables
      */
-    else if ($value || $default) {
-        $cs = $value ? $value.', '.$cs : $default.', '.$cs;
-        $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
-        setcookie($name, $cs, strtotime($duration), '/');
-        $oui_cookies[$name] = $value ? $value : $default;
-        return $display ? $cs : '';
+    else if ($values) {
+
+        $valid = in_list($gps, $values, $delim = ',');
+        /**
+         * HTTP variable is set to one of the valid 'values';
+         * set the related cookie.
+         */
+        if ($valid) {
+            $cs = $gps.', '.$cs;
+            $cs = implode(', ', array_slice(do_list_unique($cs), $offset, $limit));
+            setcookie($name, $cs, strtotime($duration), '/');
+            $oui_cookies[$name] = $values;
+            return $display ? $cs : '';
+        }
+        /**
+         * HTTP variable is set to the delete value if defined or to a non valid value;
+         * delete the cookie or set it to the 'default' value.
+         */
+        else if ($delete ? $gps == $delete : $gps && !$valid) {
+            if ($default) {
+                setcookie($name, $default, strtotime($duration), '/');
+                $oui_cookies[$name] = $default;
+                return ($display ? $default : '');
+            } else {
+                setcookie($name, '', -1, '/');
+                $oui_cookies[$name] = false;
+                return;
+            }
+        }
+        /**
+         * A non valid HTTP variable is found but the 'delete' attribute is set;
+         * do nothing.
+         */
+        else if ($cs || ($gps && !$valid && $delete)) {
+            $oui_cookies[$name] = $values ? $values : $default;
+            return $display ? $cs : '';
+        }
+        /**
+         * No valid/delete HTTP variable, no cookie set;
+         * set the cookie to the 'value' or 'default' attribute value.
+         */
+        else {
+            if ($default) {
+                setcookie($name, $default, strtotime($duration), '/');
+                $oui_cookies[$name] = $default;
+                return $display ? $default : '';
+            } else {
+                $oui_cookies[$name] = false;
+                return;
+            }
+        }
     }
     /**
-     * No valid HTTP value, 'default' value, no cookie;
-     * Do nothing.
+     * Read a cookie
      */
-    else {
-        $oui_cookies[$name] = false;
-        return;
+    else  {
+
+        if ($delete) {
+            setcookie($name, '', -1, '/');
+            $oui_cookies[$name] = false;
+            return;
+        } else {
+            return $cs;
+        }
     }
 }
 

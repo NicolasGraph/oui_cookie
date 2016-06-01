@@ -90,7 +90,7 @@ h6. Set a cookie through a HTTP variable
 
 h5. Read a cookie (also works while setting)
 
-* @display@ - _default: 1_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
+* @display@ - _default: 0 during the cookie setting (if value or values is set), 1 on reading_ - If set to _0_, the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
 * @limit@ - _default: 1_ - Allows to add each found value to the cookie value untill.
 * @offset@ - _default: 0_ - When a cookie is read you could occasionaly need to use this attribute to skip a defined number of values when the cookie contains a list.
 
@@ -197,13 +197,12 @@ function oui_cookie($atts) {
         'default'  => '',
         'duration' => '+1 day',
         'delete'   => '',
-        'display'  => '1',
+        'display'  => '0',
         'limit'    => '1',
         'offset'   => '0',
     ),$atts));
 
-    $errors = '';
-
+    $display = ($value || $values) && !$display ? '0' : '1';
     $oui_cookies = $oui_cookies ?: array();
 
     if ($name) {
@@ -231,7 +230,7 @@ function oui_cookie($atts) {
      * HTTP variable is set to the delete value if defined or to a non valid value;
      * delete the cookie or set it to the 'default' value.
      */
-    else if ($delete ? $gps == $delete : $gps && !$valid) {
+    else if ($delete == '!' || ($delete ? $gps == $delete : $gps && !$valid)) {
 
         if ($default) {
             setcookie($name, $default, strtotime($duration), '/');
@@ -282,11 +281,11 @@ function oui_cookie($atts) {
         return $display ? $cs : '';
     }
     /**
-     * Else;
-     * did I miss something?
+     * No valid HTTP value, 'default' value, no cookie;
+     * Do nothing.
      */
     else {
-        trigger_error('This condition is missing, please report it to the plugin author.')
+        $oui_cookies[$name] = false;
         return;
     }
 }
@@ -311,7 +310,10 @@ function oui_if_cookie($atts, $thing = NULL) {
         $errors .= trigger_error('oui_cookie requires an cookie attribute.');
     }
 
-    // HTTP variable found
+    /**
+     * A 'named' HTTP variable exists;
+     * Check it against a defined 'value' or return the status.
+     */
     if ($gps) {
         if ($value) {
             $valid = in_list($gps, $oui_cookies[$name]);
@@ -319,13 +321,19 @@ function oui_if_cookie($atts, $thing = NULL) {
         } else {
             $out = $oui_cookies[$name] ? true : false;
         }
-
-    // No HTTP variable but cookie found
-    } else if ($cs) {
+    }
+    /**
+     * No 'named' HTTP variable but a cookie already exists;
+     * Check it against a defined 'value' or return the status.
+     */
+    else if ($cs) {
         $out = $value ? in_list($value, $cs) : true;
-
-    // No HTTP variable, no cookie
-    } else {
+    }
+    /**
+     * No 'named' HTTP variable nor cookie found;
+     * Check the oui_cookie 'value' or 'default' value against a defined 'value' or return the status.
+     */
+    else {
         $out = $value ? in_list($value, $oui_cookies[$name]) : $oui_cookies[$name] ? true : false;
     }
 

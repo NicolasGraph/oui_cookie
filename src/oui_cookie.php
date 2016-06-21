@@ -46,7 +46,7 @@ h2. Table of contents
 ** "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
 ** "Front end articles sorting":#sort_by
-** "Last viewed articles":#last_viewed
+** "Last viewed article":#last_viewed
 ** "EU cookies warning":#eu_cookies
 * "Author":#author
 * "Licence":#licence

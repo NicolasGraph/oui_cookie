@@ -48,12 +48,12 @@ h5. Required
 
 * @name@ - _default: unset_ - The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
 
-h6. Manually set a cookie
+h5. Manually set a cookie
 
 * @value@ - _default: unset_ - A value to manually set the named cookie.
 You can also set the cookie value by using a continer tag like you would for a variable.
 
-h6. Set a cookie through a HTTP variable
+h5. Set a cookie through a HTTP variable
 
 * @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie.
 * @default@ - _default: unset_ - A default value.

@@ -147,7 +147,7 @@ bc. <txp:if_individual_article>
 
 Now, use the following code anywhere you want to display the last viewed article.
 
-bc. <txp:if_cookie name="id">
+bc. <txp:if_cookie name="last_article">
     <txp:article_custom id='<txp:oui_cookie name="last_article" />' />
 </txp:if_cookie>
 

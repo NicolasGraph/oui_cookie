@@ -4,7 +4,7 @@ $plugin['name'] = 'oui_cookie';
 
 $plugin['allow_html_help'] = 0;
 
-$plugin['version'] = '0.2.3-beta';
+$plugin['version'] = '0.2.3';
 $plugin['author'] = 'Nicolas Morand';
 $plugin['author_uri'] = 'http://github.com/NicolasGraph';
 $plugin['description'] = 'Set, read, reset or delete cookies';
@@ -66,27 +66,32 @@ h3(#oui_cookie). oui_cookie
 
 bc. <txp:oui_cookie name="…" />
 
-This tag is able to set a cookie manually with the @value@ attribute or through an HTTP variable thanks to the @values@ attribute which list accepted values. It is also able to read and return the current valid value of a HTTP variable or of the cookie set.
+or
+
+bc.. <txp:oui_cookie name="…">
+    […]
+</txp:oui_cookie>
 
 h4. Attributes
 
 h5. Required
 
-* @name@ - _default: unset_ - The name of the url variable used and of the cookie set by it.
+* @name@ - _default: unset_ - The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
 
 h6. Manually set a cookie
 
 * @value@ - _default: unset_ - A value to manually set the named cookie.
+You can also set the cookie value by using a continer tag like you would for a variable.
 
 h6. Set a cookie through a HTTP variable
 
-* @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie. If not set the tag will only read the cookie value.
-* @default@ - _default: unset_ - A default value. If set, the plugin conditional tag will always be true if not check against a defined value.
+* @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie.
+* @default@ - _default: unset_ - A default value.
+If set, the plugin conditional tag will always be true if not check against a defined value.
 
-h5. Set a cookie (any methods)
+h5. Optional cookie settings
 
 * @duration@ - _default: +1 day_ - A "strtotime":http://php.net/manual/fr/function.strtotime.php value to set the cookie duration.
-* @display@ - _default: 0_ - By default the url variable and/or the cookie will be read and set or reset, but no value will be displayed;
 
 h5. Delete a cookie
 
@@ -100,21 +105,23 @@ bc.. <txp:oui_if_cookie name="…">
     […]
 </txp:oui_if_cookie>
 
-p. This tag checks the status or the value of the HTTP variable defined by the @name@ attribute and its related cookie.
+p. This tag checks the status or the value of the cookie (and/or the related HTTP variable) defined by the @name@ attribute.
 
 h4. Attributes
 
 h5. Required
 
-* @name@ - _default: unset_ - The name of the url variable used and of the cookie set by it.
+* @name@ - _default: unset_ - The cookie (and HTTP variable) name you want to use.
 
 h5. Optional
 
-* @value@ - _default: unset_ - A value to check against the url variable or the cookie value.
+* @value@ - _default: unset_ - A value to check against the cookie (and/or the HTTP variable) value.
 
 h2(#examples). Examples
 
 h3(#sort_by). Front end articles sorting
+
+List the sort options you want to use:
 
 bc.. <select onchange="window.location.href=this.value">
     <option value="" disabled selected>Sort by</option>
@@ -122,11 +129,13 @@ bc.. <select onchange="window.location.href=this.value">
     <option value="?sort_by=custom_2">Weight</option>
 </select>
 
-<txp:article sort='<txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" display="1" />' />
+p. Then, catch the HTTP variable sent by this list to store it (useful to keep the sort order pages after pages).
 
-p. The first part of the code is a simple select element which is submited on change. Each selectable option value sets a diferent value to an url variable.
+bc. <txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />
 
-In the second part, we used @<txp:oui_cookie />@ as the value of the @sort@ attribute of @<txp:article />@. The plugin do its job by catching the @sort_by@ variable and its value. If it is equal to one of the @values@, it returns and stores it in a cookie named _sort_by_ to keep the selected order.
+Now use the new value as the value of the @sort@ attribute of your article tag.
+
+bc. <txp:article sort='<txp:oui_cookie name="sort_by" />' />
 
 h3(#last_viewed). Last viewed article
 
@@ -174,7 +183,7 @@ if (class_exists('\Textpattern\Tag\Registry')) {
  * Reads a HTTP variable, checks its value,
  * returns it and stores it in a cookie.
  */
-function oui_cookie($atts) {
+function oui_cookie($atts, $thing = null) {
     global $oui_cookies;
 
     extract(lAtts(array(
@@ -183,7 +192,6 @@ function oui_cookie($atts) {
         'values'   => '',
         'default'  => '',
         'duration' => '+1 day',
-        'display'  => '0',
         'delete'   => '0',
     ),$atts));
 
@@ -199,10 +207,19 @@ function oui_cookie($atts) {
     /**
      * Manually set a cookie.
      */
-    if ($value) {
+    if ($thing) {
+        $thing = parse($thing);
+        setcookie($name, $thing, strtotime($duration), '/');
+        $oui_cookies[$name] = $thing;
+        return;
+    }
+    /**
+     * Manually set a cookie.
+     */
+    else if ($value) {
         setcookie($name, $value, strtotime($duration), '/');
         $oui_cookies[$name] = $value;
-        return $display ? $oui_cookies[$name] : '';
+        return;
     }
     /**
      * Set a cookie through HTTP variables.
@@ -220,13 +237,13 @@ function oui_cookie($atts) {
             $oui_cookies[$name] = $gps;
         }
         /**
-         * The cookie already exists;
+         * The cookie is alredy set.
          */
         else if ($cs) {
             $oui_cookies[$name] = $cs;
         }
         /**
-         * Default setting
+         * Default setting.
          */
         else if ($default) {
             setcookie($name, $default, strtotime($duration), '/');
@@ -238,34 +255,27 @@ function oui_cookie($atts) {
         else {
             $oui_cookies[$name] = false;
         }
-
-        return $display ? $oui_cookies[$name] : '';
+        return;
     }
     /**
-     * Read a cookie or delete a cookie.
+     * Deletion.
      */
-    else {
-        /**
-         * Delete a cookie.
-         */
-        if ($delete) {
-            setcookie($name, '', -1, '/');
-            $oui_cookies[$name] = false;
-            return;
-        }
-        /**
-         * Read a value:
-         * from the related variable if it exists and is not false…
-         */
-        else if (isset($oui_cookies[$name]) && $oui_cookies[$name]) {
-            return $oui_cookies[$name];
-        }
-        /**
-         * …or, from the cookie itself.
-         */
-        else if ($cs) {
-            return $cs;
-        }
+    else if ($delete) {
+        setcookie($name, '', -1, '/');
+        $oui_cookies[$name] = false;
+        return;
+    }
+    /**
+     * Reading from the related variable if it exists and is not false…
+     */
+    else if (isset($oui_cookies[$name]) && $oui_cookies[$name]) {
+        return $oui_cookies[$name];
+    }
+    /**
+     * …or, from the cookie itself.
+     */
+    else if ($cs) {
+        return $cs;
     }
 }
 

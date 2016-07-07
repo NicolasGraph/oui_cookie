@@ -1,0 +1,11 @@
+{
+    "name"        : "oui_cookie",
+    "description" : "Set, read, reset or delete cookies",
+    "version"     : "0.2.3",
+    "type"        : 0,
+    "author"      : "Nicolas Morand",
+    "author_uri"  : "http://github.com/NicolasGraph",
+    "order"       : 5,
+    "flags"       : 0,
+    "help"        : {"file" : ["./README.textile"]}
+}

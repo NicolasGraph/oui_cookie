@@ -1,4 +1,4 @@
-h1. oui_cookie <img src="https://img.shields.io/badge/Textpattern-4.5+-brightgreen.svg" /> <img src="https://img.shields.io/github/release/NicolasGraph/oui_cookie.svg" />
+h1. oui_cookie 
 
 This plugin allows to set, read, reset or delete a cookie manually or through a HTTP variable.
 It is also possible to check the status or the value of a defined cookie, on setting or once set.

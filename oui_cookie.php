@@ -11,7 +11,8 @@ if (class_exists('\Textpattern\Tag\Registry')) {
  * Reads a HTTP variable, checks its value,
  * returns it and stores it in a cookie.
  */
-function oui_cookie($atts, $thing = null) {
+function oui_cookie($atts, $thing = null)
+{
     global $oui_cookies;
 
     extract(lAtts(array(
@@ -21,7 +22,7 @@ function oui_cookie($atts, $thing = null) {
         'default'  => '',
         'duration' => '+1 day',
         'delete'   => '0',
-    ),$atts));
+    ), $atts));
 
     if ($name) {
         $cs = cs($name);
@@ -32,77 +33,48 @@ function oui_cookie($atts, $thing = null) {
 
     $oui_cookies ?: $oui_cookies = array();
 
-    /**
-     * Manually set a cookie.
-     */
     if ($thing) {
+        // Manually set a cookie.
         $thing = parse($thing);
         setcookie($name, $thing, strtotime($duration), '/');
         $oui_cookies[$name] = $thing;
         return;
-    }
-    /**
-     * Manually set a cookie.
-     */
-    else if ($value) {
+    } elseif ($value) {
+        // Manually set a cookie.
         setcookie($name, $value, strtotime($duration), '/');
         $oui_cookies[$name] = $value;
         return;
-    }
-    /**
-     * Set a cookie through HTTP variables.
-     */
-    else if ($values) {
-        /**
-         * Get the current values of the named HTTP variable or cookie
-         */
+    } elseif ($values) {
+        // Set a cookie through HTTP variables.
+        // Get the current values of the named HTTP variable or cookie
         $gps = strval(gps($name));
-        /**
-         * The HTTP variable is set to one of the valid 'values';
-         */
+
         if (in_list($gps, $values, $delim = ',')) {
+            //The HTTP variable is set to one of the valid 'values'.
             setcookie($name, $gps, strtotime($duration), '/');
             $oui_cookies[$name] = $gps;
-        }
-        /**
-         * The cookie is alredy set.
-         */
-        else if ($cs) {
+        } elseif ($cs) {
+            // The cookie is alredy set.
             $oui_cookies[$name] = $cs;
-        }
-        /**
-         * Default setting.
-         */
-        else if ($default) {
+        } elseif ($default) {
+            // Default setting.
             setcookie($name, $default, strtotime($duration), '/');
             $oui_cookies[$name] = $default;
-        }
-        /**
-         * Else?
-         */
-        else {
+        } else {
+            // Else?
             $oui_cookies[$name] = false;
         }
         return;
-    }
-    /**
-     * Deletion.
-     */
-    else if ($delete) {
+    } elseif ($delete) {
+        // Deletion.
         setcookie($name, '', -1, '/');
         $oui_cookies[$name] = false;
         return;
-    }
-    /**
-     * Reading from the related variable if it exists and is not false…
-     */
-    else if (isset($oui_cookies[$name]) && $oui_cookies[$name]) {
+    } elseif (isset($oui_cookies[$name]) && $oui_cookies[$name]) {
+        // Reading from the related variable if it exists and is not false…
         return $oui_cookies[$name];
-    }
-    /**
-     * …or, from the cookie itself.
-     */
-    else if ($cs) {
+    } elseif ($cs) {
+        // …or, from the cookie itself.
         return $cs;
     }
 }
@@ -110,13 +82,14 @@ function oui_cookie($atts, $thing = null) {
 /**
  * Checks the status or the value of a HTTP variable or a cookie.
  */
-function oui_if_cookie($atts, $thing = NULL) {
+function oui_if_cookie($atts, $thing = null)
+{
     global $oui_cookies;
 
     extract(lAtts(array(
         'name'  => '',
         'value' => '',
-    ),$atts));
+    ), $atts));
 
     if ($name) {
         $cs = cs($name);
@@ -125,31 +98,20 @@ function oui_if_cookie($atts, $thing = NULL) {
         return;
     }
 
-    /**
-     * The cookie setting or deletion is in process;
-     */
     if (isset($oui_cookies[$name])) {
+        // The cookie setting or deletion is in process
         if ($oui_cookies[$name] === false) {
             $out = false;
         } else {
             $out = $value ? ($value === $oui_cookies[$name] ? true : false) : true;
         }
-    }
-    /**
-     * The cookie already exists.
-     */
-    else if ($cs) {
+    } elseif ($cs) {
+        // The cookie already exists.
         $out = $value ? ($value === $cs ? true : false) : true;
-    }
-    /**
-     * No cookie set nor in setting.
-     */
-    else {
+    } else {
+        // No cookie set nor in setting
         $out = false;
     }
-    /**
-     * TO DO:
-     * in the future, drop Txp 4.5 support by using parse($thing, $out) only.
-     */
+    // TO DO: in the future, drop Txp 4.5 support by using parse($thing, $out) only.
     return class_exists('\Textpattern\Tag\Registry') ? parse($thing, $out) : parse(EvalElse($thing, $out));
 }

@@ -1,36 +1,63 @@
-h1. oui_cookie 
+notextile. <div class="txp-layout">
+<div class="txp-layout-1col">
 
-This plugin allows to set, read, reset or delete a cookie manually or through a HTTP variable.
-It is also possible to check the status or the value of a defined cookie, on setting or once set.
+h1(txp-heading). oui_cookie
 
-*Warning:* According to the EU legislation you must warn your users if your website set cookies.
+notextile. </div>
+<div class="txp-layout-4col-alt">
+<section class="txp-details">
 
-"Download":https://github.com/NicolasGraph/oui_cookie/releases | "Donate":https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
+h3. Table of contents
 
-h2. Table of contents
+notextile. <div role="group">
 
-* "Plugin requirements":#requirements
-* "Installation":#installation
+*(switcher-list) "Plugin requirements":#requirements
+* "Basics":#basics
+* "Installation":#install
 * "Tags":#tags
-** "oui_cookie":#oui_cookie
-** "oui_if_cookie":#oui_if_cookie
+**{list-style:none; padding-left:0;}.
+**{padding-left:2em;} "oui_cookie":#oui_cookie
+**{padding-left:2em;} "oui_if_cookie":#oui_if_cookie
 * "Examples":#examples
-** "Front end articles sorting":#sort_by
-** "Last viewed article":#last_viewed
-** "EU cookies warning":#eu_cookies
+**{list-style:none; padding-left:0;}.
+**{padding-left:2em;} "Front end articles sorting":#sort_by
+**{padding-left:2em;} "Last viewed article":#last_viewed
+**{padding-left:2em;} "EU cookies warning":#eu_cookies
 * "Author":#author
 * "Licence":#licence
 
-h2(#requirements). Plugin requirements
+notextile. </div>
+</section>
 
-oui_cookie requires Textpattern 4.5+.
+"(navlink)See on Github":https://github.com/NicolasGraph/oui_cookie "(navlink)Donate":https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN
 
-h2(#installation). Installation
+notextile. </div>
+<div class="txp-layout-4col-3span">
+
+notextile. <hr id="basics" />
+
+h2. Basics
+
+Set, check, read, reset or delete cookies manually or through HTTP variables.
+
+p(alert-block warning). %(ui-icon ui-icon-alert).% According to the EU legislation you must warn your users if your website set cookies.
+
+notextile. <hr id="requirements" />
+
+h2. Plugin requirements
+
+oui_cookie requires Textpattern 4.6+.
+
+notextile. <hr id="install" />
+
+h2. Installation
 
 # Paste the content of the plugin file under the *Admin > Plugins* tab, upload, install and enable it;
 # Set your tags…
 
-h2(#tags). tags
+notextile. <hr id="tags" />
+
+h2. tags
 
 h3(#oui_cookie). oui_cookie
 
@@ -46,26 +73,40 @@ h4. Attributes
 
 h5. Required
 
-* @name@ - _default: unset_ - The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
+- @name@ :=
+The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
+*Default:* none =:
 
 h5. Manually set a cookie
 
-* @value@ - _default: unset_ - A value to manually set the named cookie.
+- @value@ :=
+A value to manually set the named cookie.
 You can also set the cookie value by using a continer tag like you would for a variable.
+*Default:* none =:
 
 h5. Set a cookie through a HTTP variable
 
-* @values@ - _default: unset_ - A comma separated list of accepted values for the url variable and its cookie.
-* @default@ - _default: unset_ - A default value.
+- @values@ :=
+A comma separated list of accepted values for the url variable and its cookie.
+*Default:* none =:
+- @default@ :=
+A default value.
 If set, the plugin conditional tag will always be true if not check against a defined value.
+*Default:* none =:
 
 h5. Optional cookie settings
 
-* @duration@ - _default: +1 day_ - A "strtotime":http://php.net/manual/fr/function.strtotime.php value to set the cookie duration.
+- @duration@ :=
+The duration of the cookie.
+*Default:* +1 day
+*Valid:* A "strtotime":http://php.net/manual/fr/function.strtotime.php value =:
 
 h5. Delete a cookie
 
-* @delete@ - _default: 0_ - If set to _1_ this attribute will delete the named cookie.
+- @delete@ :=
+If set to @1@ this attribute will delete the named cookie.
+*Default:* @0@
+*Valid:* @0@ or @1@ =:
 
 h3(#oui_cookie). oui_if_cookie
 
@@ -81,13 +122,18 @@ h4. Attributes
 
 h5. Required
 
-* @name@ - _default: unset_ - The cookie (and HTTP variable) name you want to use.
+- @name@* :=
+The cookie (and HTTP variable) name you want to use.
+*Default:* none =:
+- @value@ :=
+A value to check against the cookie (and/or the HTTP variable) value.
+*Default:* none =:
 
-h5. Optional
+[*] _Required._
 
-* @value@ - _default: unset_ - A value to check against the cookie (and/or the HTTP variable) value.
+notextile. <hr id="examples" />
 
-h2(#examples). Examples
+h2. Examples
 
 h3(#sort_by). Front end articles sorting
 
@@ -132,8 +178,10 @@ bc.. <txp:oui_cookie name="accept_cookies" values="yes" />
 
 h2(#author). Author
 
-"Nicolas Morand":http://github.com/NicolasGraph, inspired by a "Jukka Svahn":http://rahforum.biz/ "tip":http://textpattern.tips/setting-cookies-for-eu-legislation.
+"Nicolas Morand":https://twitter.com/NicolasGraph, inspired by a "Jukka Svahn":http://rahforum.biz/ "tip":http://textpattern.tips/setting-cookies-for-eu-legislation.
 
 h2(#licence). Licence
 
 This plugin is distributed under "GPLv2":http://www.gnu.org/licenses/gpl-2.0.fr.html.
+
+notextile. </div>

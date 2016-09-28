@@ -1,11 +1,9 @@
 <?php
 
 # --- BEGIN PLUGIN CODE ---
-if (class_exists('\Textpattern\Tag\Registry')) {
-    Txp::get('\Textpattern\Tag\Registry')
-        ->register('oui_cookie')
-        ->register('oui_if_cookie');
-}
+Txp::get('\Textpattern\Tag\Registry')
+    ->register('oui_cookie')
+    ->register('oui_if_cookie');
 
 /**
  * Reads a HTTP variable, checks its value,
@@ -112,6 +110,5 @@ function oui_if_cookie($atts, $thing = null)
         // No cookie set nor in setting
         $out = false;
     }
-    // TO DO: in the future, drop Txp 4.5 support by using parse($thing, $out) only.
-    return class_exists('\Textpattern\Tag\Registry') ? parse($thing, $out) : parse(EvalElse($thing, $out));
+    return parse($thing, $out);
 }

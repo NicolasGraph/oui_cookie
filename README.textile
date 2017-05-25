@@ -52,8 +52,23 @@ notextile. <hr id="install" />
 
 h2. Installation
 
-# Paste the content of the plugin file under the *Admin > Plugins* tab, upload, install and enable it;
-# Set your tags…
+h3. From the admin interface
+
+# "Download":https://github.com/NicolasGraph/oui_cookie/releases the compiled plugin file or the source to compile a customized file.
+# Paste the content of the compiled plugin file under the "Admin > Plugins":?event=plugin tab and click the _Upload_ button.
+# Confirm the plugin install by clicking the _Install_ button on the plugin preview page.
+# Enable the plugin.
+
+h3. Via Composer
+
+After "installing Composer":https://getcomposer.org/doc/00-intro.md…
+
+# Target your project directory:
+@$ cd /path/to/your/textpattern/installation/dir@
+# If it's not already done, lock your version of Txp:
+@$ composer require textpattern/lock:4.6.2@, where @4.6.2@ is the Txp version in use.
+# Install oui_player:
+@$ composer require oui/oui_player@
 
 notextile. <hr id="tags" />
 

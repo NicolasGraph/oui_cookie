@@ -15,7 +15,7 @@ oui_cookie's minimum requirements:
 1. [Download](https://github.com/NicolasGraph/oui_cookie/releases) the compiled plugin file or the source to compile a customized file.
 2. Paste the content of the compiled plugin file under the "Admin > Plugins":?event=plugin tab and click the _Upload_ button.
 3. Confirm the plugin install by clicking the _Install_ button on the plugin preview page.
-4. Enable the plugin and click _Options_ or visit your *Admin > Preferences* tab to fill the plugin prefs.
+4. Enable the plugin.
 
 ### Via Composer
 
@@ -27,7 +27,6 @@ After [installing Composer](https://getcomposer.org/doc/00-intro.md)…
 `$ composer require textpattern/lock:4.6.2`, where `4.6.2` is the Txp version in use.
 3. Install oui_cookie:
 `$ composer require oui/oui_cookie`
-4. Connect to the Txp admin interface and click _Options_ or visit your *Admin > Preferences* tab to fill the plugin prefs.
 
 ## Author
 

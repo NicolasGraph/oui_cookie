@@ -1,0 +1,37 @@
+notextile. <section id="credits" class="options_group">
+
+h2. Author
+
+"Nicolas Morand":https://twitter.com/NicolasGraph
+_Thank you to the Textpattern community and the core team._
+
+h2. License
+
+This plugin is distributed under the "GPL-2":https://www.gnu.org/licenses/old-licenses/gpl-2.0.fr.html.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+h2. Changelog
+
+* *0.2.4* (2017-01-16)
+** Drops Txp 4.5 support;
+** Adds Composer support.
+* *0.2.3* (2016-06-21)
+** Code rewrite;
+** manual cookie setting added;
+** @display@ attribute removed (setting and reading are now separated);
+** deletion process changed.
+* *0.1.3* (2016-05-29)
+** improves conditional tag results;
+** @delete@ attribute unset by default (but any none valid value for a defined HTTP variable will delete the related cookie).
+* *0.1.2* (2016-05-26)
+
+notextile. </section>

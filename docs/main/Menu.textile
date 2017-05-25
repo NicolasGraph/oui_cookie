@@ -1,0 +1,18 @@
+notextile. <div class="txp-layout-4col-alt" id="oui_cookie_switcher" role="region">
+<section class="txp-details" id="all_options" aria-labelledby="all_options-label">
+
+h3(#all_options-label). Table of contents
+
+notextile. <div role="group">
+
+*(switcher-list) "Basics":#basics
+* "Tags":#tags
+* "Examples":#examples
+* "Credits/changelog":#credits
+
+notextile. </div>
+</section>
+
+"(navlink)Contribute":https://github.com/NicolasGraph/oui_cookie "(navlink)Donate":https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PREHX3MZMXEUN "(navlink)Tweet":https://twitter.com/intent/tweet
+
+notextile. </div>

@@ -7,5 +7,19 @@
     "author_uri"  : "http://github.com/NicolasGraph",
     "order"       : 5,
     "flags"       : 0,
-    "help"        : {"file" : ["./README.textile"]}
+    "help"        : {"file" : [
+        "./docs/misc/_styles.textile",
+        "./docs/misc/_scripts.textile",
+        "./docs/misc/_top.textile",
+        "./docs/main/Header.textile",
+        "./docs/main/Menu.textile",
+        "./docs/misc/_text_top.textile",
+        "./docs/main/Basics.textile",
+        "./docs/main/Tags.textile",
+        "./docs/main/Examples.textile",
+        "./docs/main/Credits.textile",
+        "./docs/misc/_text_bottom.textile",
+        "./docs/misc/_bottom.textile"
+    ]},
+    "code": {"file" : ["./src/main.php"]}
 }

@@ -68,10 +68,11 @@ h5. Required
 - @name@* :=
 The cookie (and HTTP variable) name you want to use.
 *Default:* none =:
+
+h5. Optional
+
 - @value@ :=
 A value to check against the cookie (and/or the HTTP variable) value.
 *Default:* none =:
-
-[*] _Required._
 
 notextile. </section>

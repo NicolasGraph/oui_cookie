@@ -17,7 +17,7 @@
         "source": "https://github.com/NicolasGraph/oui_cookie"
     },
     "require": {
-        "textpattern/lock": "4.6*",
+        "textpattern/lock": "4.6.*",
         "textpattern/installer": "*"
     }
 }

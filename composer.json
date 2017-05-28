@@ -1,0 +1,23 @@
+{
+    "name": "oui/oui_cookie",
+    "description": "Cookie management plugin for Textpattern CMS",
+    "keywords": ["textpattern", "plugin", "cookie"],
+    "homepage": "https://github.com/NicolasGraph/oui_cookie",
+    "license": "GPL-2.0",
+    "type": "textpattern-plugin",
+    "authors": [
+        {
+            "name": "Nicolas Morand",
+            "homepage": "https://github.com/NicolasGraph",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NicolasGraph/oui_cookie/issues",
+        "source": "https://github.com/NicolasGraph/oui_cookie"
+    },
+    "require": {
+        "textpattern/lock": "4.6*",
+        "textpattern/installer": "*"
+    }
+}

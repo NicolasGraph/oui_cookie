@@ -1,11 +1,34 @@
 <?php
 
+/*
+ * oui_cookie - Set, check, read, reset or delete cookies
+ *              manually or through HTTP variables.
+ *
+ * https://github.com/NicolasGraph/oui_cookie
+ *
+ * Copyright (C) 2016 Nicolas Morand
+ *
+ * This file is part of oui_cookie.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 # --- BEGIN PLUGIN CODE ---
-if (class_exists('\Textpattern\Tag\Registry')) {
-    Txp::get('\Textpattern\Tag\Registry')
-        ->register('oui_cookie')
-        ->register('oui_if_cookie');
-}
+Txp::get('\Textpattern\Tag\Registry')
+    ->register('oui_cookie')
+    ->register('oui_if_cookie');
 
 /**
  * Reads a HTTP variable, checks its value,
@@ -112,6 +135,5 @@ function oui_if_cookie($atts, $thing = null)
         // No cookie set nor in setting
         $out = false;
     }
-    // TO DO: in the future, drop Txp 4.5 support by using parse($thing, $out) only.
-    return class_exists('\Textpattern\Tag\Registry') ? parse($thing, $out) : parse(EvalElse($thing, $out));
+    return parse($thing, $out);
 }

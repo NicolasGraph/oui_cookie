@@ -1,0 +1,78 @@
+notextile. <section id="tags" class="options_group">
+
+h2. Tags
+
+h3(#oui_cookie). oui_cookie
+
+bc. <txp:oui_cookie name="…" />
+
+or
+
+bc.. <txp:oui_cookie name="…">
+    […]
+</txp:oui_cookie>
+
+h4. Attributes
+
+h5. Required
+
+- @name@ :=
+The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
+*Default:* none =:
+
+h5. Manually set a cookie
+
+- @value@ :=
+A value to manually set the named cookie.
+You can also set the cookie value by using a continer tag like you would for a variable.
+*Default:* none =:
+
+h5. Set a cookie through a HTTP variable
+
+- @values@ :=
+A comma separated list of accepted values for the url variable and its cookie.
+*Default:* none =:
+- @default@ :=
+A default value.
+If set, the plugin conditional tag will always be true if not check against a defined value.
+*Default:* none =:
+
+h5. Optional cookie settings
+
+- @duration@ :=
+The duration of the cookie.
+*Default:* +1 day
+*Valid:* A "strtotime":http://php.net/manual/fr/function.strtotime.php value =:
+
+h5. Delete a cookie
+
+- @delete@ :=
+If set to @1@ this attribute will delete the named cookie.
+*Default:* @0@
+*Valid:* @0@ or @1@ =:
+
+h3(#oui_cookie). oui_if_cookie
+
+bc.. <txp:oui_if_cookie name="…">
+    […]
+<txp:else />
+    […]
+</txp:oui_if_cookie>
+
+p. This tag checks the status or the value of the cookie (and/or the related HTTP variable) defined by the @name@ attribute.
+
+h4. Attributes
+
+h5. Required
+
+- @name@* :=
+The cookie (and HTTP variable) name you want to use.
+*Default:* none =:
+
+h5. Optional
+
+- @value@ :=
+A value to check against the cookie (and/or the HTTP variable) value.
+*Default:* none =:
+
+notextile. </section>

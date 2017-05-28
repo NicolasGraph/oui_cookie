@@ -1,0 +1,57 @@
+notextile. <section id="basics" class="options_group">
+
+h2. Basics
+
+Set, check, read, reset or delete cookies manually or through HTTP variables.
+
+p(alert-block warning). %(ui-icon ui-icon-alert).% According to the EU legislation you must warn your users if your website set cookies.
+
+h2. Plugin requirements
+
+oui_cookie's minimum requirements:
+
+* "Textpattern CMS":http://textpattern.com/ 4.6+.
+
+h2. Installation
+
+h3. From the admin interface
+
+# "Download":https://github.com/NicolasGraph/oui_cookie/releases the compiled plugin file or the source to compile a customized file.
+# Paste the content of the compiled plugin file under the "Admin > Plugins":?event=plugin tab and click the _Upload_ button.
+# Confirm the plugin install by clicking the _Install_ button on the plugin preview page.
+# Enable the plugin.
+
+h3. Via Composer
+
+After "installing Composer":https://getcomposer.org/doc/00-intro.md…
+
+# Target your project directory:
+@$ cd /path/to/your/textpattern/installation/dir@
+# If it's not already done, lock your version of Txp:
+@$ composer require textpattern/lock:4.6.2@, where @4.6.2@ is the Txp version in use.
+# Install oui_cookie:
+@$ composer require oui/oui_cookie@
+
+h2. Update
+
+h3. From the admin interface
+
+# Follow the installation instruction above.
+
+h3. Via Composer
+
+bc. $ composer update oui/oui_cookie
+
+h2. Uninstall
+
+h3. From the admin interface
+
+# Check the box on the left of the plugin row under the "Admin > Plugins":?event=plugin.
+# open the select list at the bottom of the plugins table and choose _Delete_.
+# confirm the plugin deletion.
+
+h3. Via Composer
+
+bc. $ composer remove oui/oui_cookie
+
+notextile. </section>

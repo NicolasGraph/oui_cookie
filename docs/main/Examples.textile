@@ -40,7 +40,31 @@ bc.. <txp:oui_cookie name="accept_cookies" values="yes" />
 
 <txp:oui_if_cookie name="accept_cookies">
 <txp:else />
-    This website uses cookies. <a href="?accept_cookies=yes">I accept!</a>
+    <div id="cookies-warning">
+        <p>This website uses cookies. <a id="accept_cookies" href="?accept_cookies=yes">I agree, remove this message!</a></p>
+    </div>
 </txp:oui_if_cookie>
+
+p. Now, you can add some progressive enhancement by avoiding to refresh the page if javascript is on…
+
+bc.. <script>
+    (function() {
+        // Get the link which should remove the warning. 
+        var accept = document.getElementById("accept_cookies");
+
+        // If it exists, listen it… 
+        if (accept) {
+            accept.addEventListener('click', removeWarning);
+        }
+
+        // It is clicked!
+        function removeWarning(e){
+            document.cookie = "accept_cookies=yes;path=/;expires=864e2"; // Set the cookie for the whole domain for 1 day.
+            var warning = document.getElementById("cookies-warning"); // Get the warning message to remove.
+            warning.remove(); // Remove the message.
+            e.preventDefault(); // Do not follow the link; everything's already done!
+        };
+    }());
+</script>
 
 notextile. </section>

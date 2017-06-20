@@ -6,7 +6,7 @@ h3(#sort_by). Front end articles sorting
 
 List the sort options you want to use:
 
-bc.. <select onchange="window.location.href=this.value">
+bc(language-html).. <select onchange="window.location.href=this.value">
     <option value="" disabled selected>Sort by</option>
     <option value="?sort_by=custom_1">Size</option>
     <option value="?sort_by=custom_2">Weight</option>
@@ -14,29 +14,29 @@ bc.. <select onchange="window.location.href=this.value">
 
 p. Then, catch the HTTP variable sent by this list to store it (useful to keep the sort order pages after pages).
 
-bc. <txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />
+bc(language-markup). <txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />
 
 Now use the new value as the value of the @sort@ attribute of your article tag.
 
-bc. <txp:article sort='<txp:oui_cookie name="sort_by" />' />
+bc(language-markup). <txp:article sort='<txp:oui_cookie name="sort_by" />' />
 
 h3(#last_viewed). Last viewed article
 
 Store the current article id in a cookie:
 
-bc. <txp:if_individual_article>
+bc(language-markup). <txp:if_individual_article>
     <txp:oui_cookie name="last_article" value='<txp:article_id />' />
 </txp:if_individual_article>
 
 Now, use the following code anywhere you want to display the last viewed article.
 
-bc. <txp:if_cookie name="last_article">
+bc(language-markup). <txp:if_cookie name="last_article">
     <txp:article_custom id='<txp:oui_cookie name="last_article" />' />
 </txp:if_cookie>
 
 h3(#eu_cookies). EU cookies Warning
 
-bc.. <txp:oui_cookie name="accept_cookies" values="yes" />
+bc(language-markup).. <txp:oui_cookie name="accept_cookies" values="yes" />
 
 <txp:oui_if_cookie name="accept_cookies">
 <txp:else />
@@ -47,7 +47,7 @@ bc.. <txp:oui_cookie name="accept_cookies" values="yes" />
 
 p. Now, you can add some progressive enhancement by avoiding to refresh the page if javascript is on…
 
-bc.. <script>
+bc(language-javascript).. <script>
     (function() {
         // Get the link which should remove the warning. 
         var accept = document.getElementById("accept_cookies");

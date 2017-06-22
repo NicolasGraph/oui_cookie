@@ -36,6 +36,8 @@ A comma separated list of accepted values for the url variable and its cookie.
 A default value.
 If set, the plugin conditional tag will always be true if not check against a defined value.
 *Default:* none =:
+- @delete@ :=
+An URL variable value used to delete the cookie.
 
 h5. Optional cookie settings
 

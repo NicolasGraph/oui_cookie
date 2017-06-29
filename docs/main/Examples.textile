@@ -50,7 +50,7 @@ p. Now, you can add some progressive enhancement by avoiding to refresh the page
 bc(language-javascript).. <script>
     (function() {
         // Get the link which should remove the warning. 
-        var accept = document.getElementById("accept_cookies");
+        var accept = document.getElementById('accept_cookies');
 
         // If it exists, listen it… 
         if (accept) {
@@ -59,8 +59,8 @@ bc(language-javascript).. <script>
 
         // It is clicked!
         function removeWarning(e){
-            document.cookie = "accept_cookies=yes;path=/;expires=864e2"; // Set the cookie for the whole domain for 1 day.
-            var warning = document.getElementById("cookies-warning"); // Get the warning message to remove.
+            document.cookie = 'accept_cookies=yes;path=/;expires=864e2'; // Set the cookie for the whole domain for 1 day.
+            var warning = document.getElementById('cookies-warning'); // Get the warning message to remove.
             warning.remove(); // Remove the message.
             e.preventDefault(); // Do not follow the link; everything's already done!
         };

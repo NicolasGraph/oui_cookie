@@ -59,12 +59,12 @@ function oui_cookie($atts, $thing = null)
     if ($thing) {
         // Manually set a cookie.
         $thing = parse($thing);
-        setcookie($name, $thing, strtotime($duration), '/');
+        setcookie($name, $thing, strtotime($duration), '/', null, false, true);
         $oui_cookies[$name] = $thing;
         return;
     } elseif ($value) {
         // Manually set a cookie.
-        setcookie($name, $value, strtotime($duration), '/');
+        setcookie($name, $value, strtotime($duration), '/', null, false, true);
         $oui_cookies[$name] = $value;
         return;
     } elseif ($values) {
@@ -74,7 +74,7 @@ function oui_cookie($atts, $thing = null)
 
         if ($gps !== '' && in_list($gps, $values, $delim = ',')) {
             // The HTTP variable is set to one of the valid 'values'.
-            setcookie($name, $gps, strtotime($duration), '/');
+            setcookie($name, $gps, strtotime($duration), '/', null, false, true);
             $oui_cookies[$name] = $gps;
         } elseif ($gps !== '' && $gps === $delete) {
             // The HTTP variable is set to the 'delete' value.
@@ -85,7 +85,7 @@ function oui_cookie($atts, $thing = null)
             $oui_cookies[$name] = $cs;
         } elseif ($default) {
             // Default setting.
-            setcookie($name, $default, strtotime($duration), '/');
+            setcookie($name, $default, strtotime($duration), '/', null, false, true);
             $oui_cookies[$name] = $default;
         } else {
             // Else?

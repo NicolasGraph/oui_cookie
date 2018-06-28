@@ -1,0 +1,237 @@
+h1. oui_cookie
+
+h2. Introduction
+
+Set, check, read, reset or delete cookies manually or through HTTP variables.
+
+p(alert-block warning). %(ui-icon ui-icon-alert).% According to the EU legislation you must warn your users if your website set cookies.
+
+h3. Plugin requirements
+
+oui_cookie's minimum requirements:
+
+* "Textpattern CMS":http://textpattern.com/ 4.6+.
+
+h2. Plugin management
+
+h3. Installation
+
+h4. From the admin interface
+
+# "Download":https://github.com/NicolasGraph/oui_cookie/releases the compiled plugin file or the source to compile a customized file.
+# Paste the content of the compiled plugin file under the "Admin > Plugins":?event=plugin tab and click the _Upload_ button.
+# Confirm the plugin install by clicking the _Install_ button on the plugin preview page.
+# Enable the plugin.
+
+h4. Via Composer
+
+After "installing Composer":https://getcomposer.org/doc/00-intro.md…
+
+# Target your project directory:
+@$ cd /path/to/your/textpattern/installation/dir@
+# If it's not already done, lock your version of Txp:
+@$ composer require textpattern/lock:4.6.2@, where @4.6.2@ is the Txp version in use.
+# Install oui_cookie:
+@$ composer require oui/oui_cookie@
+
+h3. Update
+
+h4. From the admin interface
+
+# Follow the installation instruction above.
+
+h4. Via Composer
+
+bc. $ composer update oui/oui_cookie
+
+h3. Uninstall
+
+h4. From the admin interface
+
+# Check the box on the left of the plugin row under the "Admin > Plugins":?event=plugin.
+# open the select list at the bottom of the plugins table and choose _Delete_.
+# confirm the plugin deletion.
+
+h4. Via Composer
+
+bc. $ composer remove oui/oui_cookie
+
+h2. Tags
+
+h3(#oui_cookie). oui_cookie
+
+bc(language-markup). <txp:oui_cookie name="…" />
+
+or
+
+bc(language-markup).. <txp:oui_cookie name="…">
+    […]
+</txp:oui_cookie>
+
+h4. Attributes
+
+h5. Required
+
+- @name@ :=
+The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
+*Default:* none =:
+
+h5. Manually set a cookie
+
+- @value@ :=
+A value to manually set the named cookie.
+You can also set the cookie value by using a continer tag like you would for a variable.
+*Default:* none =:
+
+h5. Set a cookie through a HTTP variable
+
+- @values@ :=
+A comma separated list of accepted values for the url variable and its cookie.
+*Default:* none =:
+- @default@ :=
+A default value.
+If set, the plugin conditional tag will always be true if not check against a defined value.
+*Default:* none =:
+- @delete@ :=
+An URL variable value used to delete the cookie.
+
+h5. Optional cookie settings
+
+- @duration@ :=
+The duration of the cookie.
+*Default:* +1 day
+*Valid:* A "strtotime":http://php.net/manual/fr/function.strtotime.php value =:
+
+h5. Delete a cookie
+
+- @delete@ :=
+If set to @1@ this attribute will delete the named cookie.
+*Default:* @0@
+*Valid:* @0@ or @1@ =:
+
+h3(#oui_cookie). oui_if_cookie
+
+bc(language-markup).. <txp:oui_if_cookie name="…">
+    […]
+<txp:else />
+    […]
+</txp:oui_if_cookie>
+
+p. This tag checks the status or the value of the cookie (and/or the related HTTP variable) defined by the @name@ attribute.
+
+h4. Attributes
+
+h5. Required
+
+- @name@* :=
+The cookie (and HTTP variable) name you want to use.
+*Default:* none =:
+
+h5. Optional
+
+- @value@ :=
+A value to check against the cookie (and/or the HTTP variable) value.
+*Default:* none =:
+
+h2. Examples
+
+h3(#sort_by). Front end articles sorting
+
+List the sort options you want to use:
+
+bc(language-html).. <select onchange="window.location.href=this.value">
+    <option value="" disabled selected>Sort by</option>
+    <option value="?sort_by=custom_1">Size</option>
+    <option value="?sort_by=custom_2">Weight</option>
+</select>
+
+p. Then, catch the HTTP variable sent by this list to store it (useful to keep the sort order pages after pages).
+
+bc(language-markup). <txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />
+
+Now use the new value as the value of the @sort@ attribute of your article tag.
+
+bc(language-markup). <txp:article sort='<txp:oui_cookie name="sort_by" />' />
+
+h3(#last_viewed). Last viewed article
+
+Store the current article id in a cookie:
+
+bc(language-markup). <txp:if_individual_article>
+    <txp:oui_cookie name="last_article" value='<txp:article_id />' />
+</txp:if_individual_article>
+
+Now, use the following code anywhere you want to display the last viewed article.
+
+bc(language-markup). <txp:if_cookie name="last_article">
+    <txp:article_custom id='<txp:oui_cookie name="last_article" />' />
+</txp:if_cookie>
+
+h3(#eu_cookies). EU cookies Warning
+
+bc(language-markup).. <txp:oui_cookie name="accept_cookies" values="yes" />
+
+<txp:oui_if_cookie name="accept_cookies">
+<txp:else />
+    <div id="cookies-warning">
+        <p>This website uses cookies. <a id="accept_cookies" href="?accept_cookies=yes">I agree, remove this message!</a></p>
+    </div>
+</txp:oui_if_cookie>
+
+p. Now, you can add some progressive enhancement by avoiding to refresh the page if javascript is on…
+
+bc(language-javascript).. <script>
+    (function() {
+        // Get the link which should remove the warning.
+        var accept = document.getElementById('accept_cookies');
+
+        // If it exists, listen it…
+        if (accept) {
+            accept.addEventListener('click', removeWarning);
+        }
+
+        // It is clicked!
+        function removeWarning(e){
+            document.cookie = 'accept_cookies=yes;path=/;expires=864e2'; // Set the cookie for the whole domain for 1 day.
+            var warning = document.getElementById('cookies-warning'); // Get the warning message to remove.
+            warning.remove(); // Remove the message.
+            e.preventDefault(); // Do not follow the link; everything's already done!
+        };
+    }());
+</script>
+
+h2. Credits
+
+h3. Author
+
+"Nicolas Morand":https://twitter.com/NicolasGraph
+_Thank you to the Textpattern community and the core team._
+
+h3. License
+
+This plugin is distributed under the "GPL-2":https://www.gnu.org/licenses/old-licenses/gpl-2.0.fr.html.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+h3. Changelog
+
+* *1.0.0-beta2* (2017-05-28)
+** Drops Txp 4.5 support;
+** Adds "Composer":https://getcomposer.org/ support for "textpattern/installer":https://packagist.org/packages/textpattern/installer.
+* *0.2.3* (2016-06-21)
+** Code rewrite;
+** manual cookie setting added;
+** @display@ attribute removed (setting and reading are now separated);
+** deletion process changed.
+* *0.1.3* (2016-05-29)
+** improves conditional tag results;
+** @delete@ attribute unset by default (but any none valid value for a defined HTTP variable will delete the related cookie).
+* *0.1.2* (2016-05-26)

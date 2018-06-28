@@ -44,7 +44,7 @@ function oui_cookie($atts, $thing = null)
         'values'   => '',
         'default'  => '',
         'duration' => '+1 day',
-        'delete'   => '0',
+        'delete'   => false,
     ), $atts));
 
     if ($name) {
@@ -74,7 +74,7 @@ function oui_cookie($atts, $thing = null)
 
         if ($gps !== '' && in_list($gps, $values, $delim = ',')) {
             // The HTTP variable is set to one of the valid 'values'.
-            setcookie($name, $gps, strtotime($duration), '/', null, false, true);
+            setcookie($name, $gps, strtotime($duration), '/');
             $oui_cookies[$name] = $gps;
         } elseif ($gps !== '' && $gps === $delete) {
             // The HTTP variable is set to the 'delete' value.

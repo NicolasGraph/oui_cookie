@@ -56,6 +56,9 @@ function oui_cookie($atts, $thing = null)
 
     $oui_cookies ?: $oui_cookies = array();
 
+    // Get the current values of the named HTTP variable or cookie
+    $gps = strval(gps($name));
+
     if ($thing) {
         // Manually set a cookie.
         $thing = parse($thing);
@@ -69,14 +72,11 @@ function oui_cookie($atts, $thing = null)
         return;
     } elseif ($values) {
         // Set a cookie through HTTP variables.
-        // Get the current values of the named HTTP variable or cookie
-        $gps = strval(gps($name));
-
         if ($gps !== '' && in_list($gps, $values, $delim = ',')) {
             // The HTTP variable is set to one of the valid 'values'.
             setcookie($name, $gps, strtotime($duration), '/');
             $oui_cookies[$name] = $gps;
-        } elseif ($gps !== '' && $gps === $delete) {
+        } elseif ($gps && $gps === $delete) {
             // The HTTP variable is set to the 'delete' value.
             setcookie($name, '', -1, '/');
             $oui_cookies[$name] = false;
@@ -97,9 +97,13 @@ function oui_cookie($atts, $thing = null)
         setcookie($name, '', -1, '/');
         $oui_cookies[$name] = false;
         return;
-    } elseif (isset($oui_cookies[$name]) && $oui_cookies[$name]) {
-        // Reading from the related variable if it exists and is not false…
-        return $oui_cookies[$name];
+    } elseif (isset($oui_cookies[$name])) {
+        if ($oui_cookies[$name]) {
+            // Reading from the related variable if it exists and is not false…
+            return $oui_cookies[$name];
+        } else {
+            return;
+        }
     } elseif ($cs) {
         // …or, from the cookie itself.
         return $cs;

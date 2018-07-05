@@ -25,123 +25,274 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-# --- BEGIN PLUGIN CODE ---
-Txp::get('\Textpattern\Tag\Registry')
-    ->register('oui_cookie')
-    ->register('oui_if_cookie');
+namespace Oui {
 
-/**
- * Reads a HTTP variable, checks its value,
- * returns it and stores it in a cookie.
- */
-function oui_cookie($atts, $thing = null)
-{
-    global $oui_cookies;
+    class cookie {
 
-    extract(lAtts(array(
-        'name'     => '',
-        'value'    => '',
-        'values'   => '',
-        'default'  => '',
-        'duration' => '+1 day',
-        'delete'   => false,
-    ), $atts));
+        /**
+         * Cookie name.
+         *
+         * @var string
+         * @see        setName(), getName().
+         */
 
-    if ($name) {
-        $cs = cs($name);
-    } else {
-        trigger_error('oui_cookie requires an "name" attribute.');
-        return;
-    }
+        protected $name;
 
-    $oui_cookies ?: $oui_cookies = array();
+        /**
+         * Cookie related URL parameter.
+         *
+         * @var string
+         * @see        setParam(), getParam().
+         */
 
-    // Get the current values of the named HTTP variable or cookie
-    $gps = strval(gps($name));
+        protected $param;
 
-    if ($thing) {
-        // Manually set a cookie.
-        $thing = parse($thing);
-        setcookie($name, $thing, strtotime($duration), '/', null, false, true);
-        $oui_cookies[$name] = $thing;
-        return;
-    } elseif ($value) {
-        // Manually set a cookie.
-        setcookie($name, $value, strtotime($duration), '/', null, false, true);
-        $oui_cookies[$name] = $value;
-        return;
-    } elseif ($values) {
-        // Set a cookie through HTTP variables.
-        if ($gps !== '' && in_list($gps, $values, $delim = ',')) {
-            // The HTTP variable is set to one of the valid 'values'.
-            setcookie($name, $gps, strtotime($duration), '/');
-            $oui_cookies[$name] = $gps;
-        } elseif ($gps && $gps === $delete) {
-            // The HTTP variable is set to the 'delete' value.
-            setcookie($name, '', -1, '/');
-            $oui_cookies[$name] = false;
-        } elseif ($cs) {
-            // The cookie is alredy set.
-            $oui_cookies[$name] = $cs;
-        } elseif ($default) {
-            // Default setting.
-            setcookie($name, $default, strtotime($duration), '/', null, false, true);
-            $oui_cookies[$name] = $default;
-        } else {
-            // Else?
-            $oui_cookies[$name] = false;
+        /**
+         * In process cookie setting value.
+         *
+         * @var array The provided value as a string or false.
+         * @see       setProcessing(), getProcessing().
+         */
+
+        protected static $processing = array();
+
+        /**
+         * Cookie value.
+         *
+         * @var string
+         * @see        setCookie(), getCookie().
+         */
+
+        protected $cookie;
+
+        /**
+         * $name property setter.
+         *
+         * @return object $this.
+         */
+
+        protected function setName($value) {
+            $this->name = $value;
+
+            return $this;
         }
-        return;
-    } elseif ($delete) {
-        // Deletion.
-        setcookie($name, '', -1, '/');
-        $oui_cookies[$name] = false;
-        return;
-    } elseif (isset($oui_cookies[$name])) {
-        if ($oui_cookies[$name]) {
-            // Reading from the related variable if it exists and is not false…
-            return $oui_cookies[$name];
-        } else {
-            return;
+
+        /**
+         * $param property getter.
+         *
+         * @return string $this->param.
+         */
+
+        protected function getName() {
+            return $this->name;
         }
-    } elseif ($cs) {
-        // …or, from the cookie itself.
-        return $cs;
+
+        /**
+         * $param property setter.
+         *
+         * @return object $this.
+         */
+
+        protected function setParam() {
+            $this->param = strval(gps($this->getName()));
+
+            return $this;
+        }
+
+        /**
+         * $param property getter.
+         *
+         * @return string $this->param.
+         */
+
+        protected function getParam() {
+            $this->param or $this->setParam();
+
+            return $this->param;
+        }
+
+        /**
+         * $processing property setter.
+         *
+         * @return object $this.
+         */
+
+        protected function setProcessing($value) {
+            static::$processing[$this->getName()] = $value;
+
+            return $this;
+        }
+
+        /**
+         * $processing property getter.
+         *
+         * @return mixed
+         */
+
+        protected function getProcessing() {
+            if (array_key_exists($this->getName(), static::$processing)) {
+                return static::$processing[$this->getName()];
+            }
+
+            return null;
+        }
+
+        /**
+         * $cookie property setter.
+         *
+         * @return object $this.
+         */
+
+        protected function setCookie() {
+            $this->cookie = cs($this->getName());
+
+            return $this;
+        }
+
+        /**
+         * $cookie property getter.
+         *
+         * @return mixed
+         */
+
+        protected function getCookie() {
+            $this->cookie or $this->setCookie();
+
+            return $this->cookie;
+        }
+
+        /**
+         * Delete a cookie.
+         * Set the related $processing property value to false.
+         *
+         * @return bool TRUE if the cookie unsetting succeeded.
+         */
+
+        protected function delete() {
+            $this->setProcessing(false);
+
+            return setcookie($this->getName(), '', -1, '/');
+        }
+
+        /**
+         * Set a cookie.
+         * Set the related $processing property value.
+         *
+         * @return bool TRUE if the cookie setting succeeded.
+         */
+
+        public function set($value, $duration) {
+            $name = $this->getName();
+
+            setcookie($name, $value, strtotime($duration), '/', null, false, true);
+            $this->setProcessing($value);
+
+            return setcookie($name, $value, strtotime($duration), '/', null, false, true);
+        }
+
+        /**
+         * Check the status/value of a defined cookie name against its cookie/URL-parameter related value.
+         *
+         * @param  string $value A value to check against the set one;
+         * @return bool   TRUE if the defined cookie is set or in setting
+         *                and, optionally, if its value match the one provided.
+         */
+
+        public function isSet($value = null) {
+            $cs = $this->getCookie();
+            $processing = $this->getProcessing();
+            $out = false;
+
+            if ($processing === false) {
+                $out = false;
+            } elseif ($processing) {
+                $out = $value ? ($value === $processing ? true : false) : true;
+            } elseif ($cs) {
+                $out = $value ? ($value === $cs ? true : false) : true;
+            }
+
+            return $out;
+        }
+
+        /**
+         * Set, read or delete a cookie, manually or from an URL parameter.
+         *
+         * @param  array  $atts Attributes in use;
+         * @param  string $thing Tag content when used as a container.
+         * @return string The cookie value on reading.
+         */
+
+        public static function renderCookie($atts, $thing = null)
+        {
+            $instance = \Txp::get('Oui\Cookie');
+
+            extract(lAtts(array(
+                'name'     => '',
+                'value'    => '',
+                'values'   => '',
+                'default'  => '',
+                'duration' => '+1 day',
+                'delete'   => '',
+            ), $atts));
+
+            if ($name) {
+                $cs = $instance->setName($name)->getCookie();
+                $gps = $instance->getParam();
+            } else {
+                trigger_error('oui_cookie requires an "name" attribute.');
+                return;
+            }
+
+            if ($thing) {
+                $value = parse($thing);
+            } elseif ($values && in_list($gps, $values, $delim = ',')) {
+                $value = $gps;
+            } elseif ($default) {
+                $value = $default;
+            }
+
+            if ($value) {
+                $instance->set($value, $duration);
+            } elseif ($delete && !$values || $values && $gps && $gps === $delete) {
+                $instance->delete();
+            } elseif (!$values) {
+                $processing = $instance->getProcessing();
+
+                return $cs && $processing !== false ? $cs : $processing;
+            }
+        }
+
+        /**
+         * Switch between two defined contents/behaviours depending on the $isSet() result.
+         *
+         * @param  array  $atts  Attributes in use;
+         * @param  string $thing Tag content.
+         * @return mixed  The default contents/behaviour if $isSet returns TRUE, the else part otherwise.
+         */
+
+        public static function renderIfCookie($atts, $thing = null)
+        {
+            $instance = \Txp::get('Oui\Cookie');
+
+            extract(lAtts(array(
+                'name'  => '',
+                'value' => '',
+            ), $atts));
+
+            if ($name) {
+                $instance->setName($name);
+            } else {
+                trigger_error('oui_cookie requires a name attribute.');
+                return;
+            }
+
+            return parse($thing, $instance->isSet($value));
+        }
     }
 }
 
-/**
- * Checks the status or the value of a HTTP variable or a cookie.
- */
-function oui_if_cookie($atts, $thing = null)
-{
-    global $oui_cookies;
-
-    extract(lAtts(array(
-        'name'  => '',
-        'value' => '',
-    ), $atts));
-
-    if ($name) {
-        $cs = cs($name);
-    } else {
-        trigger_error('oui_cookie requires a name attribute.');
-        return;
-    }
-
-    if (isset($oui_cookies[$name])) {
-        // The cookie setting or deletion is in process
-        if ($oui_cookies[$name] === false) {
-            $out = false;
-        } else {
-            $out = $value ? ($value === $oui_cookies[$name] ? true : false) : true;
-        }
-    } elseif ($cs) {
-        // The cookie already exists.
-        $out = $value ? ($value === $cs ? true : false) : true;
-    } else {
-        // No cookie set nor in setting
-        $out = false;
-    }
-    return parse($thing, $out);
+namespace {
+    Txp::get('\Textpattern\Tag\Registry')
+        ->register('Oui\Cookie::renderCookie', 'oui_cookie')
+        ->register('Oui\Cookie::renderIfCookie', 'oui_if_cookie');
 }

@@ -3,7 +3,7 @@
     "description": "Cookie management plugin for Textpattern CMS",
     "keywords": ["textpattern", "plugin", "cookie"],
     "homepage": "https://github.com/NicolasGraph/oui_cookie",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "type": "textpattern-plugin",
     "authors": [
         {

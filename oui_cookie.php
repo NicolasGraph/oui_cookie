@@ -245,7 +245,7 @@ namespace Oui {
                 $value = parse($thing);
             } elseif ($values && in_list($gps, $values, $delim = ',')) {
                 $value = $gps;
-            } elseif ($default) {
+            } elseif (!$cs && $default) {
                 $value = $default;
             }
 

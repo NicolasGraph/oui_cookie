@@ -4,7 +4,7 @@ h2. Introduction
 
 Set, check, read, reset or delete cookies manually or through GET/POST parameters.
 
-p(alert-block warning). %(ui-icon ui-icon-alert).% According to the "EU legislation":http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm#section_2 some cookies need the user consent before to be set.
+p(alert-block warning). %(ui-icon ui-icon-alert).% According to the "EU legislation":http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm#section_2, some cookies need the user consent before to be set.
 
 h3. Plugin requirements
 
@@ -135,7 +135,7 @@ A value to check against the cookie (and/or the HTTP variable) value.
 
 h2. Examples
 
-h3(#sort_by). Front end articles sorting
+h3(#sort_by). Front-end articles sorting
 
 List the sort options you want to use:
 

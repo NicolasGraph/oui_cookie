@@ -4,7 +4,7 @@ h2. Introduction
 
 Set, check, read, reset or delete cookies manually or through HTTP variables.
 
-p(alert-block warning). %(ui-icon ui-icon-alert).% According to the EU legislation you must warn your users if your website set cookies.
+p(alert-block warning). %(ui-icon ui-icon-alert).% According to the "EU legislation":http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm#section_2 some cookies need the user consent before to be set.
 
 h3. Plugin requirements
 

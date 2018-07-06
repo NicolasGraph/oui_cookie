@@ -178,7 +178,8 @@ bc(language-markup).. <txp:oui_cookie name="accept_cookies" values="yes" />
     </div>
 </txp:oui_if_cookie>
 
-p. Now, you can add some progressive enhancement by avoiding to refresh the page if javascript is on…
+p. Now, you can add some progressive enhancement to avoid to refresh the page if javascript is on.
+However, note that it wouldn't instantaneously display a potential alternative content placed before the @<txp:else />@ tag if the cookie is not set/setting.
 
 bc(language-javascript).. <script>
     (function() {
@@ -199,6 +200,23 @@ bc(language-javascript).. <script>
         };
     }());
 </script>
+
+h3. Set a cookie on form submission
+
+bc.. <txp:oui_cookie name="form_submitted" values="yes" />
+
+<txp:oui_if_cookie name="form_submitted">
+    The form was already submitted.
+<txp:else />
+    <form method="post">
+      …
+      <input type="hidden" name="form_submitted" value="yes"><br>
+      <input type="submit" value="Submit">
+    </form>
+<txp:oui_if_cookie>
+
+Using a form associated with the @post@ method allows to not display the parameter send to the plugin in the URL.
+Of course, the hidden input can be seen in the source code of the page, and here, if the cookie would be removed by the user, the form would appear again.
 
 h2. Credits
 

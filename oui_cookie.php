@@ -36,7 +36,7 @@ namespace Oui {
         protected $name;
 
         /**
-         * Cookie related URL parameter.
+         * Cookie related GET/POST parameter.
          *
          * @var string
          * @see        setParam(), getParam().
@@ -47,14 +47,14 @@ namespace Oui {
         /**
          * In process cookie setting value.
          *
-         * @var array The provided value as a string or false.
+         * @var array The provided value as a string or FALSE.
          * @see       setProcessing(), getProcessing().
          */
 
         protected static $processing = array();
 
         /**
-         * Cookie value.
+         * Cookie value set.
          *
          * @var string
          * @see        setCookie(), getCookie().
@@ -75,9 +75,9 @@ namespace Oui {
         }
 
         /**
-         * $param property getter.
+         * $name property getter.
          *
-         * @return string $this->param.
+         * @return string $this->name.
          */
 
         protected function getName() {
@@ -149,7 +149,7 @@ namespace Oui {
         /**
          * $cookie property getter.
          *
-         * @return mixed
+         * @return mixed $this->cookie
          */
 
         protected function getCookie() {
@@ -212,7 +212,8 @@ namespace Oui {
         }
 
         /**
-         * Set, read or delete a cookie, manually or from an URL parameter.
+         * oui_cookie callback method.
+         * Set, read or delete a cookie, manually or from a GET/POST parameter.
          *
          * @param  array  $atts Attributes in use;
          * @param  string $thing Tag content when used as a container.
@@ -260,6 +261,7 @@ namespace Oui {
         }
 
         /**
+         * oui_if_cookie callback method.
          * Switch between two defined contents/behaviours depending on the $isSet() result.
          *
          * @param  array  $atts  Attributes in use;

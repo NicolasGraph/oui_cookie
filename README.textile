@@ -139,11 +139,13 @@ h3(#sort_by). Front end articles sorting
 
 List the sort options you want to use:
 
-bc(language-html).. <select onchange="window.location.href=this.value">
-    <option value="" disabled selected>Sort by</option>
-    <option value="?sort_by=custom_1">Size</option>
-    <option value="?sort_by=custom_2">Weight</option>
-</select>
+bc(language-html).. <form action="#" method="post">
+    <select name="sort_by">
+        <option value="custom_1"<txp:oui_if_cookie name="sort_by" value="custom_1"> disabled selected</txp:oui_if_cookie>>Size</option>
+        <option value="custom_2"<txp:oui_if_cookie name="sort_by" value="custom_2"> disabled selected</txp:oui_if_cookie>>Weight</option>
+    </select>
+    <input type="submit" value="Sort">
+</form>
 
 p. Then, catch the HTTP variable sent by this list to store it (useful to keep the sort order pages after pages).
 
@@ -200,23 +202,6 @@ bc(language-javascript).. <script>
         };
     }());
 </script>
-
-h3. Set a cookie on form submission
-
-bc.. <txp:oui_cookie name="form_submitted" values="yes" />
-
-<txp:oui_if_cookie name="form_submitted">
-    The form was already submitted.
-<txp:else />
-    <form method="post">
-      …
-      <input type="hidden" name="form_submitted" value="yes"><br>
-      <input type="submit" value="Submit">
-    </form>
-<txp:oui_if_cookie>
-
-Using a form associated with the @post@ method allows to not display the parameter send to the plugin in the URL.
-Of course, the hidden input can be seen in the source code of the page, and here, if the cookie would be removed by the user, the form would appear again.
 
 h2. Credits
 

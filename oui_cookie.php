@@ -179,12 +179,9 @@ namespace Oui {
          */
 
         public function set($value, $duration) {
-            $name = $this->getName();
-
-            setcookie($name, $value, strtotime($duration), '/', null, false, true);
             $this->setProcessing($value);
 
-            return setcookie($name, $value, strtotime($duration), '/', null, false, true);
+            return setcookie($this->getName(), $value, strtotime($duration), '/', null, false, true);
         }
 
         /**

@@ -73,41 +73,40 @@ h4. Attributes
 h5. Required
 
 - @name@ :=
-The cookie (and GET/POST parmater) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
-*Default:* none =:
+*Value:* string; none by default.
+The cookie (and GET/POST parmater) name you want to use. If no other attibutes are defined, the tag will read and display the related value. =:
 
 h5. Manually set a cookie
 
 - @value@ :=
+*Value:* string; none by default.
 A value to manually set the named cookie.
-You can also set the cookie value by using a continer tag like you would for a variable.
-*Default:* none =:
+You can also set the cookie value by using a continer tag like you would for a variable. =:
 
 h5. Set a cookie through a GET/POST parameter
 
 - @values@ :=
-A comma separated list of accepted values for the GET/POST parameter and its cookie.
-*Default:* none =:
+*Value:* comma separated list of strings; none by default.
+A comma separated list of accepted values for the GET/POST parameter and its cookie. =:
 - @default@ :=
+*Value:* string; none by default.
 A default value.
-If set, the plugin conditional tag will always be true if not check against a defined value.
-*Default:* none =:
+If set, the plugin conditional tag will always be true if not check against a defined value. =:
 - @delete@ :=
-An GET/POST parameter value used to delete the cookie.
+*Value:* string; none by default.
+An GET/POST parameter value used to delete the cookie. =:
 
 h5. Optional cookie settings
 
 - @duration@ :=
-The duration of the cookie.
-*Default:* +1 day
-*Valid:* A "strtotime":http://php.net/manual/fr/function.strtotime.php value =:
+*Value:* "strtotime":http://php.net/manual/fr/function.strtotime.php value, @+1 day@ by default.
+The duration of the cookie. =:
 
 h5. Delete a cookie
 
 - @delete@ :=
-If set to @1@ this attribute will delete the named cookie.
-*Default:* @0@
-*Valid:* @0@ or @1@ =:
+*Value:* @0@ or @1@; @0@ by default.
+If set to @1@ this attribute will delete the named cookie. =:
 
 h3(#oui_cookie). oui_if_cookie
 
@@ -123,19 +122,19 @@ h4. Attributes
 
 h5. Required
 
-- @name@* :=
-The cookie (and GET/POST parameter) name you want to use.
-*Default:* none =:
+- *@name@* :=
+*Value:* string; none by default.
+The cookie (and GET/POST parameter) name you want to use. =:
 
 h5. Optional
 
 - @value@ :=
-A value to check against the cookie (and/or the GET/POST parameter) value.
-*Default:* none =:
+*Value:* string; none by default.
+A value to check against the cookie (and/or the GET/POST parameter) value. =:
 
 h2. Examples
 
-h3(#sort_by). Front-end articles sorting
+h3. Front-end articles sorting
 
 List the sort options you want to use:
 
@@ -155,7 +154,7 @@ Now use the new value as the value of the @sort@ attribute of your article tag.
 
 bc(language-markup). <txp:article sort='<txp:oui_cookie name="sort_by" />' />
 
-h3(#last_viewed). Last viewed article
+h3. Last viewed article
 
 Store the current article id in a cookie:
 
@@ -169,7 +168,7 @@ bc(language-markup). <txp:if_cookie name="last_article">
     <txp:article_custom id='<txp:oui_cookie name="last_article" />' />
 </txp:if_cookie>
 
-h3(#eu_cookies). EU cookies Warning
+h3. EU cookies Warning
 
 bc(language-markup).. <txp:oui_cookie name="accept_cookies" values="yes" />
 

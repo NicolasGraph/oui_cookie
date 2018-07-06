@@ -2,7 +2,7 @@ h1. oui_cookie
 
 h2. Introduction
 
-Set, check, read, reset or delete cookies manually or through HTTP variables.
+Set, check, read, reset or delete cookies manually or through GET/POST parameters.
 
 p(alert-block warning). %(ui-icon ui-icon-alert).% According to the "EU legislation":http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm#section_2 some cookies need the user consent before to be set.
 
@@ -86,14 +86,14 @@ You can also set the cookie value by using a continer tag like you would for a v
 h5. Set a cookie through a HTTP variable
 
 - @values@ :=
-A comma separated list of accepted values for the url variable and its cookie.
+A comma separated list of accepted values for the GET/POST parameter and its cookie.
 *Default:* none =:
 - @default@ :=
 A default value.
 If set, the plugin conditional tag will always be true if not check against a defined value.
 *Default:* none =:
 - @delete@ :=
-An URL variable value used to delete the cookie.
+An GET/POST parameter value used to delete the cookie.
 
 h5. Optional cookie settings
 

@@ -73,7 +73,7 @@ h4. Attributes
 h5. Required
 
 - @name@ :=
-The cookie (and HTTP variable) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
+The cookie (and GET/POST parmater) name you want to use. If no other attibutes are defined, the tag will read and display the related value.
 *Default:* none =:
 
 h5. Manually set a cookie
@@ -83,7 +83,7 @@ A value to manually set the named cookie.
 You can also set the cookie value by using a continer tag like you would for a variable.
 *Default:* none =:
 
-h5. Set a cookie through a HTTP variable
+h5. Set a cookie through a GET/POST parameter
 
 - @values@ :=
 A comma separated list of accepted values for the GET/POST parameter and its cookie.
@@ -117,20 +117,20 @@ bc(language-markup).. <txp:oui_if_cookie name="…">
     […]
 </txp:oui_if_cookie>
 
-p. This tag checks the status or the value of the cookie (and/or the related HTTP variable) defined by the @name@ attribute.
+p. This tag checks the status or the value of the cookie (and/or the related GET/POST parameter) defined by the @name@ attribute.
 
 h4. Attributes
 
 h5. Required
 
 - @name@* :=
-The cookie (and HTTP variable) name you want to use.
+The cookie (and GET/POST parameter) name you want to use.
 *Default:* none =:
 
 h5. Optional
 
 - @value@ :=
-A value to check against the cookie (and/or the HTTP variable) value.
+A value to check against the cookie (and/or the GET/POST parameter) value.
 *Default:* none =:
 
 h2. Examples
@@ -147,7 +147,7 @@ bc(language-html).. <form action="#" method="post">
     <input type="submit" value="Sort">
 </form>
 
-p. Then, catch the HTTP variable sent by this list to store it (useful to keep the sort order pages after pages).
+p. Then, catch the GET/POST parameter sent by this list to store it (useful to keep the sort order pages after pages).
 
 bc(language-markup). <txp:oui_cookie name="sort_by" values="custom_1, custom_2" default="custom_1" />
 
@@ -231,5 +231,5 @@ h3. Changelog
 ** deletion process changed.
 * *0.1.3* (2016-05-29)
 ** improves conditional tag results;
-** @delete@ attribute unset by default (but any none valid value for a defined HTTP variable will delete the related cookie).
+** @delete@ attribute unset by default (but any none valid value for a defined GET/POST parameter will delete the related cookie).
 * *0.1.2* (2016-05-26)

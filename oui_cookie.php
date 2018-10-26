@@ -192,7 +192,7 @@ namespace Oui {
          *                and, optionally, if its value match the one provided.
          */
 
-        public function isSet($value = null) {
+        public function isCookieSet($value = null) {
             $cs = $this->getCookie();
             $processing = $this->getProcessing();
             $out = false;
@@ -259,11 +259,11 @@ namespace Oui {
 
         /**
          * oui_if_cookie callback method.
-         * Switch between two defined contents/behaviours depending on the $isSet() result.
+         * Switch between two defined contents/behaviours depending on the $isCookieSet() result.
          *
          * @param  array  $atts  Attributes in use;
          * @param  string $thing Tag content.
-         * @return mixed  The default contents/behaviour if $isSet returns TRUE, the else part otherwise.
+         * @return mixed  The default contents/behaviour if $isCookieSet returns TRUE, the else part otherwise.
          */
 
         public static function renderIfCookie($atts, $thing = null)
@@ -282,7 +282,7 @@ namespace Oui {
                 return;
             }
 
-            return parse($thing, $instance->isSet($value));
+            return parse($thing, $instance->isCookieSet($value));
         }
     }
 }

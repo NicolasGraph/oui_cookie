@@ -1,7 +1,7 @@
 {
     "name"        : "oui_cookie",
     "description" : "Set, read, reset or delete cookies",
-    "version"     : "1.0.0-BETA3",
+    "version"     : "1.0.0-BETA4",
     "type"        : 0,
     "author"      : "Nicolas Morand",
     "author_uri"  : "http://github.com/NicolasGraph",

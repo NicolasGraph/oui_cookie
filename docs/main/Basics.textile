@@ -1,56 +1,56 @@
 notextile. <section id="basics" class="options_group">
 
-h2. Basics
+h2. Nozioni base
 
-Set, check, read, reset or delete cookies manually or through HTTP variables.
+Imposta, controlla, leggi, ripristina o elimina i cookie manualmente o tramite variabili HTTP.
 
 p(alert-block warning). %(ui-icon ui-icon-alert).% According to the EU legislation you must warn your users if your website set cookies.
 
-h2. Plugin requirements
+h2. Requisiti del plugin
 
-oui_cookie's minimum requirements:
+Requisiti minimi di oui_cookie:
 
 * "Textpattern CMS":http://textpattern.com/ 4.6+.
 
-h2. Installation
+h2. Installazione
 
-h3. From the admin interface
+h3. Dall'interfaccia di amministrazione
 
-# "Download":https://github.com/NicolasGraph/oui_cookie/releases the compiled plugin file or the source to compile a customized file.
-# Paste the content of the compiled plugin file under the "Admin > Plugins":?event=plugin tab and click the _Upload_ button.
-# Confirm the plugin install by clicking the _Install_ button on the plugin preview page.
-# Enable the plugin.
+# "Download":https://github.com/NicolasGraph/oui_cookie/releases il file del plug-in compilato o l'origine per compilare un file personalizzato.
+# Incolla il contenuto del file del plug-in compilato sotto "Admin > Plugins":?event=plugin scheda e fare clic sul pulsante _Upload Aggiornare_.
+# Conferma l'installazione del plug-in facendo clic sul pulsante _Install (installa)_ nella pagina di anteprima del plug-in.
+# Abilita il plug-in.
 
-h3. Via Composer
+h3. Mediante compositore
 
-After "installing Composer":https://getcomposer.org/doc/00-intro.md…
+# dopo "installa compositore":https://getcomposer.org/doc/00-intro.md…
 
-# Target your project directory:
+# indica il percorso selezionato:
 @$ cd /path/to/your/textpattern/installation/dir@
-# If it's not already done, lock your version of Txp:
-@$ composer require textpattern/lock:4.6.2@, where @4.6.2@ is the Txp version in use.
-# Install oui_cookie:
+# Se non è già stato fatto, blocca la tua versione di Txp:
+@$ composer require textpattern/lock:4.6.2@, dove @4.6.2@ è la versione Txp in uso.
+# Installa oui_cookie:
 @$ composer require oui/oui_cookie@
 
-h2. Update
+h2. Aggiornare
 
-h3. From the admin interface
+h3. Dall'interfaccia di amministrazione
 
-# Follow the installation instruction above.
+# Seguire le istruzioni di installazione sopra.
 
-h3. Via Composer
+h3. Mediante compositore
 
 bc. $ composer update oui/oui_cookie
 
-h2. Uninstall
+h2. Disistalla
 
-h3. From the admin interface
+h3. Dall'interfaccia di amministrazione
 
-# Check the box on the left of the plugin row under the "Admin > Plugins":?event=plugin.
-# open the select list at the bottom of the plugins table and choose _Delete_.
+# Seleziona la casella a sinistra della riga del plugin sotto il "Admin > Plugins":?event=plugin.
+# apri l'elenco di selezione nella parte inferiore della tabella dei plugin e scegli _Delete (cancella)_.
 # confirm the plugin deletion.
 
-h3. Via Composer
+h3. Mediante compositore
 
 bc. $ composer remove oui/oui_cookie
 
